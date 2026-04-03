@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     # TODO: Replace this URL with your actual GitHub repository URL after you push
-    repoURL: https://github.com/YOUR_Franion03/arr-stack.git
+    repoURL: https://github.com/Franion03/arr-stack.git
     targetRevision: HEAD
     path: apps
   destination:
