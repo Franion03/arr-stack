@@ -9,3 +9,5 @@ resources:
   - radarr/
   - transmission/
   - jellyfin/
+  - homarr/
+  - kubernetes-dashboard/
