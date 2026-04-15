@@ -33,9 +33,15 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v2
 echo "Waiting for ArgoCD server to be ready..."
 kubectl wait --for=condition=available deployment/argocd-server -n argocd --timeout=300s
 
-echo "Applying root application..."
+echo "Installing NGINX Ingress Controller..."
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.0/deploy/static/provider/cloud/deploy.yaml
+echo "Waiting for NGINX Ingress to be ready..."
+kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
+
+echo "Applying root application and ArgoCD Ingress..."
 # Note: You MUST push your repository to GitHub before this root app will succeed in syncing!
 kubectl apply -f argocd/root.yaml
+kubectl apply -f argocd/ingress.yaml
 
 echo "=========================================="
 echo "Bootstrap complete!"
