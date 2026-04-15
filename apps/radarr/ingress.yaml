@@ -6,10 +6,12 @@ metadata:
   annotations:
     ingress.kubernetes.io/ssl-redirect: "false"
 spec:
+  ingressClassName: nginx
   rules:
-    - http:
+    - host: radarr.192.168.1.114.nip.io
+      http:
         paths:
-          - path: /radarr
+          - path: /
             pathType: Prefix
             backend:
               service:

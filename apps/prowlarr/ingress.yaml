@@ -6,10 +6,12 @@ metadata:
   annotations:
     ingress.kubernetes.io/ssl-redirect: "false"
 spec:
+  ingressClassName: nginx
   rules:
-    - http:
+    - host: prowlarr.192.168.1.114.nip.io
+      http:
         paths:
-          - path: /prowlarr
+          - path: /
             pathType: Prefix
             backend:
               service:
