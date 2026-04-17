@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dispatcharr
+  namespace: media
+  labels:
+    app: dispatcharr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dispatcharr
+  template:
+    metadata:
+      labels:
+        app: dispatcharr
+    spec:
+      containers:
+        - name: dispatcharr
+          image: ghcr.io/dispatcharr/dispatcharr:latest
+          ports:
+            - containerPort: 9191
+          env:
+            - name: DISPATCHARR_ENV
+              value: "aio"
+            - name: REDIS_HOST
+              value: "localhost"
+            - name: CELERY_BROKER_URL
+              value: "redis://localhost:6379/0"
+            - name: DISPATCHARR_LOG_LEVEL
+              value: "info"
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          emptyDir: {}

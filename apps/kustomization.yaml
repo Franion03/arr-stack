@@ -11,3 +11,4 @@ resources:
   - jellyfin/
   - homarr/
   - kubernetes-dashboard/
+  - dispatcharr/
