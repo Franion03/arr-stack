@@ -27,6 +27,8 @@ spec:
               value: "1000"
             - name: TZ
               value: "Etc/UTC"
+            - name: JELLYFIN_PublishedServerUrl
+              value: "jellyfin.192.168.1.114.nip.io"
           volumeMounts:
             - name: config
               mountPath: /config
