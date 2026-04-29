@@ -30,11 +30,11 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: downloads
-              mountPath: /data/downloads
+            - name: media
+              mountPath: /data
       volumes:
         - name: config
           emptyDir: {}
-        - name: downloads
+        - name: media
           persistentVolumeClaim:
             claimName: media-pvc
