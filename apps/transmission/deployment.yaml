@@ -32,9 +32,16 @@ spec:
               mountPath: /config
             - name: media
               mountPath: /data
+            - name: media
+              mountPath: /downloads
+              subPath: torrents
+            - name: media
+              mountPath: /watch
+              subPath: watch
       volumes:
         - name: config
           emptyDir: {}
         - name: media
           persistentVolumeClaim:
             claimName: media-pvc
+

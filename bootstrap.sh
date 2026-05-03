@@ -6,7 +6,7 @@ set -e
 # ==========================================
 
 CLUSTER_NAME="arr-cluster"
-HOST_MEDIA_PATH="/mnt/media" # Change this to the actual media directory on your host
+HOST_MEDIA_PATH="/srv/media" # Change this to the actual media directory on your host
 
 # 1. Check dependencies
 command -v k3d >/dev/null 2>&1 || { echo >&2 "k3d is required but not installed. Aborting."; exit 1; }
