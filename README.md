@@ -9,6 +9,29 @@ This repository contains the complete definitions to run the Arr Stack (Sonarr, 
 
 ## Setup Instructions
 
+### 0. Prepare Server Infrastructure (Terraform)
+
+If you are deploying this on a fresh Ubuntu/Debian server, you can use the provided Terraform code to automatically install Docker, k3d, and kubectl, and configure the necessary host directories.
+
+1. Ensure you have an SSH key configured to access your server without a password.
+2. Go to the terraform directory:
+   ```bash
+   cd terraform
+   ```
+3. Copy the variables template:
+   ```bash
+   cp terraform.tfvars.example terraform.tfvars
+   ```
+4. Edit `terraform.tfvars` with your server's IP, SSH username, SSH key path, and the user's sudo password (if required).
+5. Initialize and apply the configuration:
+   ```bash
+   terraform init
+   terraform apply
+   ```
+6. Once complete, return to the root directory (`cd ..`) and proceed with the remaining steps.
+
+### 1. Configure the Cluster
+
 1. **Update GitHub URL**: Open `argocd/root.yaml` and replace the placeholder `repoURL` with the actual URL of your GitHub repository.
 2. **Commit and Push**:
    ```bash

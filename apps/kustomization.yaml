@@ -12,3 +12,4 @@ resources:
   - homarr/
   - kubernetes-dashboard/
   - dispatcharr/
+  - cloudflared/

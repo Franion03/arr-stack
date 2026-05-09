@@ -27,14 +27,28 @@ spec:
               value: "1000"
             - name: TZ
               value: "Etc/UTC"
+            - name: TRANSMISSION_DOWNLOAD_DIR
+              value: "/data/downloads/complete"
+            - name: TRANSMISSION_INCOMPLETE_DIR
+              value: "/data/downloads/incomplete"
+            - name: TRANSMISSION_INCOMPLETE_DIR_ENABLED
+              value: "true"
+            - name: TRANSMISSION_WATCH_DIR
+              value: "/data/downloads/watch"
+            - name: TRANSMISSION_WATCH_DIR_ENABLED
+              value: "true"
           volumeMounts:
             - name: config
               mountPath: /config
             - name: media
               mountPath: /data
+            - name: media
+              mountPath: /downloads
+              subPath: downloads
       volumes:
         - name: config
           emptyDir: {}
         - name: media
           persistentVolumeClaim:
             claimName: media-pvc
+
