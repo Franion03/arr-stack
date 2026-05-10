@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: transmission
+  name: jellyseerr
   namespace: media
   labels:
-    app: transmission
+    app: jellyseerr
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: transmission
+      app: jellyseerr
   template:
     metadata:
       labels:
-        app: transmission
+        app: jellyseerr
     spec:
       containers:
-        - name: transmission
-          image: lscr.io/linuxserver/transmission:latest
+        - name: jellyseerr
+          image: fallenbagel/jellyseerr:latest
           ports:
-            - containerPort: 9091
+            - containerPort: 5055
           env:
             - name: PUID
               value: "1000"
@@ -29,12 +29,7 @@ spec:
               value: "Etc/UTC"
           volumeMounts:
             - name: config
-              mountPath: /config
-            - name: media
-              mountPath: /data
+              mountPath: /app/config
       volumes:
         - name: config
           emptyDir: {}
-        - name: media
-          persistentVolumeClaim:
-            claimName: media-pvc

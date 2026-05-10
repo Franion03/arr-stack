@@ -58,3 +58,4 @@ If you are deploying this on a fresh Ubuntu/Debian server, you can use the provi
   - `http://localhost/prowlarr`
   - `http://localhost/transmission`
   - `http://localhost/jellyfin`
+  - `http://localhost/jellyseerr`

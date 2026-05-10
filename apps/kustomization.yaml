@@ -9,6 +9,7 @@ resources:
   - radarr/
   - transmission/
   - jellyfin/
+  - jellyseerr/
   - homarr/
   - kubernetes-dashboard/
   - dispatcharr/
