@@ -19,6 +19,24 @@ spec:
         supplementalGroups:
           - 44    # video group - access to /dev/dri/card0
           - 992   # render group - access to /dev/dri/renderD128
+      initContainers:
+        - name: enable-hw-accel
+          image: busybox:latest
+          command:
+            - sh
+            - -c
+            - |
+              if [ -f /config/encoding.xml ]; then
+                sed -i 's|<HardwareAccelerationType>none</HardwareAccelerationType>|<HardwareAccelerationType>vaapi</HardwareAccelerationType>|' /config/encoding.xml
+                sed -i 's|<VaapiDevice></VaapiDevice>|<VaapiDevice>/dev/dri/renderD128</VaapiDevice>|' /config/encoding.xml
+                sed -i 's|<EnableHardwareEncoding>false</EnableHardwareEncoding>|<EnableHardwareEncoding>true</EnableHardwareEncoding>|' /config/encoding.xml
+                echo "Hardware acceleration enabled in encoding.xml"
+              else
+                echo "encoding.xml not found, Jellyfin will create defaults"
+              fi
+          volumeMounts:
+            - name: config
+              mountPath: /config
       containers:
         - name: jellyfin
           image: lscr.io/linuxserver/jellyfin:latest
