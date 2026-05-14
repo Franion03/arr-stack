@@ -22,6 +22,8 @@ spec:
       containers:
         - name: jellyfin
           image: lscr.io/linuxserver/jellyfin:latest
+          securityContext:
+            privileged: true
           ports:
             - containerPort: 8096
           env:
@@ -33,6 +35,10 @@ spec:
               value: "Etc/UTC"
             - name: JELLYFIN_PublishedServerUrl
               value: "jellyfin.192.168.1.114.nip.io"
+            - name: LIBVA_DRIVERS_PATH
+              value: "/usr/lib/jellyfin-ffmpeg/lib/dri"
+            - name: LIBVA_DRIVER_NAME
+              value: "iHD"
           volumeMounts:
             - name: config
               mountPath: /config
