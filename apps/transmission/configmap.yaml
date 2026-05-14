@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: transmission-settings
+  namespace: media
+data:
+  settings.json: |
+    {
+      "cache-size-mb": 256,
+      "download-dir": "/data/downloads/complete",
+      "incomplete-dir": "/data/downloads/incomplete",
+      "incomplete-dir-enabled": true,
+      "encryption": 1,
+      "peer-limit-global": 500,
+      "peer-limit-per-torrent": 100,
+      "peer-port": 51413,
+      "pex-enabled": true,
+      "dht-enabled": true,
+      "utp-enabled": true,
+      "tcp-enabled": true,
+      "lpd-enabled": false,
+      "port-forwarding-enabled": true,
+      "prefetch-enabled": 1,
+      "preallocation": 1,
+      "upload-slots-per-torrent": 14,
+      "reqq": 2000,
+      "speed-limit-down": 0,
+      "speed-limit-down-enabled": false,
+      "speed-limit-up": 1000,
+      "speed-limit-up-enabled": true,
+      "rpc-authentication-required": false,
+      "rpc-whitelist-enabled": false,
+      "rpc-host-whitelist-enabled": false,
+      "rpc-port": 9091,
+      "watch-dir": "/data/watch",
+      "watch-dir-enabled": true
+    }
