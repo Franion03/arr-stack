@@ -19,5 +19,6 @@ namespace: assistant
 resources:
   - namespace.yaml
   - network-policy.yaml
+  - sealed-secret.yaml
   - openwebui/
   - harness/
