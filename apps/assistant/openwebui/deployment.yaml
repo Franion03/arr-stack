@@ -38,6 +38,24 @@ spec:
             - name: OPENAI_API_KEY
               valueFrom:
                 secretKeyRef: { name: harness-secrets, key: ANTHROPIC_API_KEY }
+            # The gateway is an *authenticated* one: Cloudflare rejects with
+            # its own 401 before forwarding unless cf-aig-authorization is
+            # present. Open WebUI attaches per-connection custom headers from
+            # this JSON (key "0" = the first OPENAI_API_BASE_URL). It carries
+            # the gateway token, so it lives in the Secret, not the ConfigMap.
+            - name: OPENAI_API_CONFIGS
+              valueFrom:
+                secretKeyRef: { name: harness-secrets, key: OPENAI_API_CONFIGS }
+
+            # Open WebUI seeds its SQLite config table from these env vars on
+            # FIRST boot and thereafter the database wins -- a changed
+            # ConfigMap would be silently ignored, which defeats the whole
+            # point of keeping the swap point in git. Turning persistence off
+            # makes the environment authoritative on every start. The cost:
+            # these particular settings can no longer be edited in the admin
+            # UI, which is correct here -- they are ArgoCD's to own.
+            - name: ENABLE_PERSISTENT_CONFIG
+              value: "false"
 
             # No local models; Ollama would otherwise be probed on every start.
             - name: ENABLE_OLLAMA_API
