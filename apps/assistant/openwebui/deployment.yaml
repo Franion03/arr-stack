@@ -47,6 +47,15 @@ spec:
               valueFrom:
                 secretKeyRef: { name: harness-secrets, key: OPENAI_API_CONFIGS }
 
+            # ── Tools ───────────────────────────────────────────────────
+            # Registering the tool server through the admin UI writes it to
+            # the SQLite config, which ENABLE_PERSISTENT_CONFIG=false makes
+            # the app ignore -- so it has to be declared here like the rest.
+            # It embeds TOOLS_API_KEY, hence the Secret.
+            - name: TOOL_SERVER_CONNECTIONS
+              valueFrom:
+                secretKeyRef: { name: harness-secrets, key: TOOL_SERVER_CONNECTIONS }
+
             # Open WebUI seeds its SQLite config table from these env vars on
             # FIRST boot and thereafter the database wins -- a changed
             # ConfigMap would be silently ignored, which defeats the whole
