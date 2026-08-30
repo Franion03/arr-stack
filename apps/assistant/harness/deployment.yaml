@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: harness
+  namespace: assistant
+  labels:
+    app: harness
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: harness
+  template:
+    metadata:
+      labels:
+        app: harness
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+      containers:
+        - name: harness
+          image: ghcr.io/franion03/home-harness:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            # Only the credentials this server actually uses. No model-vendor
+            # key is mounted here — it never talks to an LLM.
+            - name: HA_URL
+              valueFrom:
+                secretKeyRef: { name: harness-secrets, key: HA_URL }
+            - name: HA_TOKEN
+              valueFrom:
+                secretKeyRef: { name: harness-secrets, key: HA_TOKEN }
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef: { name: harness-secrets, key: GOOGLE_CLIENT_ID }
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef: { name: harness-secrets, key: GOOGLE_CLIENT_SECRET }
+            - name: GOOGLE_REFRESH_TOKEN
+              valueFrom:
+                secretKeyRef: { name: harness-secrets, key: GOOGLE_REFRESH_TOKEN }
+            - name: GOOGLE_CALENDAR_ID
+              valueFrom:
+                secretKeyRef: { name: harness-secrets, key: GOOGLE_CALENDAR_ID }
+            - name: TOOLS_API_KEY
+              valueFrom:
+                secretKeyRef: { name: harness-secrets, key: TOOLS_API_KEY }
+            - name: TZ
+              value: "Europe/Madrid"
+            - name: LOG_LEVEL
+              value: "INFO"
+          readinessProbe:
+            httpGet: { path: /health, port: http }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 6
+          livenessProbe:
+            httpGet: { path: /health, port: http }
+            initialDelaySeconds: 20
+            periodSeconds: 30
+            failureThreshold: 4
+          resources:
+            requests: { cpu: 50m,  memory: 96Mi }
+            limits:   { cpu: 500m, memory: 384Mi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }

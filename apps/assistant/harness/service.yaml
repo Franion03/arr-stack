@@ -4,10 +4,12 @@ metadata:
   name: harness
   namespace: assistant
 spec:
+  # ClusterIP with no Ingress, deliberately: these tools can unlock doors and
+  # delete calendar events.
+  type: ClusterIP
   selector:
     app: harness
   ports:
     - name: http
-      protocol: TCP
       port: 80
       targetPort: 8080

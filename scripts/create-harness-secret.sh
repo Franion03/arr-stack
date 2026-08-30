@@ -19,7 +19,7 @@ KEYS=(
   GROQ_API_KEY CF_WORKERS_AI_TOKEN ELEVENLABS_API_KEY DEEPGRAM_API_KEY
   HA_URL HA_TOKEN
   GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET GOOGLE_REFRESH_TOKEN GOOGLE_CALENDAR_ID
-  HARNESS_API_KEY
+  TOOLS_API_KEY WEBUI_SECRET_KEY
 )
 
 args=()
@@ -38,4 +38,4 @@ kubectl create secret generic "$SECRET" \
   --dry-run=client -o yaml | kubectl apply -f -
 
 echo "✓ Secret '$SECRET' applied to namespace '$NAMESPACE' (${set_count}/${#KEYS[@]} values set)."
-echo "  Restart to pick it up:  kubectl -n $NAMESPACE rollout restart deploy/harness"
+echo "  Restart to pick it up:  kubectl -n $NAMESPACE rollout restart deploy/harness deploy/backend"

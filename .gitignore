@@ -1,0 +1,5 @@
+
+# Real credentials — never commit.
+secrets/.env
+secrets/*.env
+!secrets/keys.env.example

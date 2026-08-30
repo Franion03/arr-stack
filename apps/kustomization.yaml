@@ -14,4 +14,4 @@ resources:
   - kubernetes-dashboard/
   - dispatcharr/
   - cloudflared/
-  - harness/
+  - assistant/

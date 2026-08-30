@@ -1,0 +1,23 @@
+# The assistant: Open WebUI plus a tool server for the house.
+#
+#   openwebui  ghcr.io/open-webui/open-webui   UI, sessions, auth, voice,
+#                                              model routing
+#   harness    ghcr.io/franion03/home-harness  OpenAPI tool server:
+#                                              Home Assistant + Calendar
+#
+# Only Open WebUI is reachable from outside. The harness has no Ingress and a
+# NetworkPolicy admitting only Open WebUI -- it can unlock doors and delete
+# calendar events.
+#
+# arr-stack-root's destination namespace is `media`, so `assistant` is pinned
+# here and on every resource.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: assistant
+
+resources:
+  - namespace.yaml
+  - network-policy.yaml
+  - openwebui/
+  - harness/

@@ -1,0 +1,45 @@
+# The tool server can turn off the heating, unlock a door and delete calendar
+# events. Only Open WebUI has any reason to reach it, so nothing else may.
+#
+# k3s enforces NetworkPolicy out of the box (kube-router). Without this, any
+# pod in the cluster — including anything in the media namespace — could call
+# these tools directly.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: harness-ingress
+  namespace: assistant
+spec:
+  podSelector:
+    matchLabels:
+      app: harness
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: openwebui
+      ports:
+        - port: 8080
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: openwebui-ingress
+  namespace: assistant
+spec:
+  podSelector:
+    matchLabels:
+      app: openwebui
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - port: 8080
+          protocol: TCP

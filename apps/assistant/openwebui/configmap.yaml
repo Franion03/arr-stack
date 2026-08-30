@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openwebui-config
+  namespace: assistant
+data:
+  # ─────────────────────────────────────────────────────────────────────
+  # THE MODEL SWAP POINT.
+  #
+  # Both URLs go through the Cloudflare AI Gateway, which gives caching,
+  # cost analytics and rate limiting without touching the application.
+  # Replace CF_ACCOUNT_ID with your account id.
+  #
+  # To change vendor, change the provider segment and point OPENAI_API_KEY
+  # at the matching secret key in the Deployment:
+  #
+  #   anthropic         .../anthropic/v1        (ANTHROPIC_API_KEY)
+  #   openai            .../openai/v1           (OPENAI_API_KEY)
+  #   google-ai-studio  .../google-ai-studio/v1 (GOOGLE_AI_API_KEY)
+  #   openrouter        .../openrouter/v1       (OPENROUTER_API_KEY)
+  #
+  # Set it to the vendor's own URL to bypass the gateway entirely, e.g.
+  # https://api.anthropic.com/v1
+  # ─────────────────────────────────────────────────────────────────────
+  OPENAI_API_BASE_URL: "https://gateway.ai.cloudflare.com/v1/CF_ACCOUNT_ID/home-harness/anthropic/v1"
+
+  # Speech always goes to OpenAI, whichever vendor answers the chat.
+  OPENAI_AUDIO_BASE_URL: "https://gateway.ai.cloudflare.com/v1/CF_ACCOUNT_ID/home-harness/openai/v1"

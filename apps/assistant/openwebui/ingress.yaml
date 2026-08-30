@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: assistant
+  namespace: assistant
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+    # Audio uploads and document ingestion.
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    # Open WebUI streams responses over SSE and uses websockets; buffering
+    # would make replies arrive in one lump.
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: assistant.192.168.1.114.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: openwebui
+                port:
+                  number: 80

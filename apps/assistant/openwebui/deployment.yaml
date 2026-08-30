@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openwebui
+  namespace: assistant
+  labels:
+    app: openwebui
+spec:
+  replicas: 1
+  strategy:
+    # SQLite on a single RWO PVC: the old pod must release it first.
+    type: Recreate
+  selector:
+    matchLabels:
+      app: openwebui
+  template:
+    metadata:
+      labels:
+        app: openwebui
+    spec:
+      securityContext:
+        fsGroup: 0
+      containers:
+        - name: openwebui
+          image: ghcr.io/open-webui/open-webui:main
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            # ── Models ──────────────────────────────────────────────────
+            # Anthropic through the Cloudflare AI Gateway, via its
+            # OpenAI-compatible endpoint. Swapping vendor is a change to
+            # these two values and nothing else.
+            - name: OPENAI_API_BASE_URL
+              valueFrom:
+                configMapKeyRef: { name: openwebui-config, key: OPENAI_API_BASE_URL }
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef: { name: harness-secrets, key: ANTHROPIC_API_KEY }
+
+            # No local models; Ollama would otherwise be probed on every start.
+            - name: ENABLE_OLLAMA_API
+              value: "false"
+
+            # ── Speech ──────────────────────────────────────────────────
+            - name: AUDIO_STT_ENGINE
+              value: "openai"
+            - name: AUDIO_STT_OPENAI_API_BASE_URL
+              valueFrom:
+                configMapKeyRef: { name: openwebui-config, key: OPENAI_AUDIO_BASE_URL }
+            - name: AUDIO_STT_OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef: { name: harness-secrets, key: OPENAI_API_KEY }
+            - name: AUDIO_STT_MODEL
+              value: "gpt-4o-transcribe"
+            - name: AUDIO_TTS_ENGINE
+              value: "openai"
+            - name: AUDIO_TTS_OPENAI_API_BASE_URL
+              valueFrom:
+                configMapKeyRef: { name: openwebui-config, key: OPENAI_AUDIO_BASE_URL }
+            - name: AUDIO_TTS_OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef: { name: harness-secrets, key: OPENAI_API_KEY }
+            - name: AUDIO_TTS_MODEL
+              value: "tts-1"
+            - name: AUDIO_TTS_VOICE
+              value: "nova"
+
+            # ── Instance ────────────────────────────────────────────────
+            - name: WEBUI_NAME
+              value: "Casa"
+            # Signing key for sessions. Without a fixed value every restart
+            # logs everyone out.
+            - name: WEBUI_SECRET_KEY
+              valueFrom:
+                secretKeyRef: { name: harness-secrets, key: WEBUI_SECRET_KEY }
+            # It is on a LAN behind Cloudflare Access, but the first account
+            # created is an admin, so leave auth on.
+            - name: WEBUI_AUTH
+              value: "true"
+            # Nobody else should be able to sign themselves up.
+            - name: ENABLE_SIGNUP
+              value: "false"
+            - name: TZ
+              value: "Europe/Madrid"
+          volumeMounts:
+            - name: data
+              mountPath: /app/backend/data
+          readinessProbe:
+            httpGet: { path: /health, port: http }
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 12
+          livenessProbe:
+            httpGet: { path: /health, port: http }
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 4
+          resources:
+            requests: { cpu: 200m, memory: 512Mi }
+            limits:   { cpu: "2",  memory: 4Gi }
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: openwebui-data
