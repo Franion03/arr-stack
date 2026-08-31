@@ -43,19 +43,3 @@ spec:
       ports:
         - port: 8080
           protocol: TCP
-    # The cloudflared tunnel terminates HTTPS for harness.calzadoskiruz.com and
-    # forwards here. It lives in the media namespace, so without this it is
-    # blocked by the rule above. Both selectors are in one `from` element, so
-    # they AND: only the cloudflared pod, and only from media -- not the whole
-    # namespace. Open WebUI is the only thing exposed this way; the tool server
-    # stays unreachable from outside the assistant namespace.
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: media
-          podSelector:
-            matchLabels:
-              app: cloudflared
-      ports:
-        - port: 8080
-          protocol: TCP

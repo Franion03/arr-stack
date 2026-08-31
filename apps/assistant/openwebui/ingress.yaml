@@ -15,6 +15,22 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
+    # Reached through the cloudflared tunnel, which forwards to the nginx
+    # controller with this Host header. Routing the tunnel through nginx
+    # rather than straight at the Service keeps the openwebui NetworkPolicy
+    # to its single ingress-nginx exception -- and kube-router does not
+    # honour a namespaceSelector+podSelector peer anyway, so a direct rule
+    # for the cloudflared pod silently drops every packet.
+    - host: harness.calzadoskiruz.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: openwebui
+                port:
+                  number: 80
     - host: assistant.192.168.1.114.nip.io
       http:
         paths:
