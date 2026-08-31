@@ -44,6 +44,14 @@ spec:
               value: "false"
             - name: GF_ANALYTICS_CHECK_FOR_UPDATES
               value: "false"
+            # Business Charts (Apache ECharts). Grafana has no body-diagram
+            # panel and Canvas cannot fill an arbitrary shape proportionally,
+            # so the composition figure needs a panel that draws real SVG.
+            # Downloaded at container start, which makes startup depend on
+            # reaching grafana.com -- if that fails Grafana still boots and
+            # only that one panel is missing.
+            - name: GF_INSTALL_PLUGINS
+              value: "volkovlabs-echarts-panel"
           resources:
             requests:
               cpu: "50m"
