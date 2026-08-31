@@ -95,6 +95,10 @@ spec:
               value: "nova"
 
             # ── Instance ────────────────────────────────────────────────
+            # TEMPORARY (2026-08-31): the assistant answers over the API but
+            # every reply is stored empty. Revert once the cause is found.
+            - name: GLOBAL_LOG_LEVEL
+              value: "DEBUG"
             - name: WEBUI_NAME
               value: "Casa"
             # Signing key for sessions. Without a fixed value every restart
