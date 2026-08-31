@@ -1,0 +1,117 @@
+# The theme. Open WebUI's shell links /static/custom.css last, so this is
+# the supported way to restyle it -- no forked image, no patched build.
+#
+# Mounted over the empty custom.css that ships in the image. Because it is
+# a subPath mount, edits here need a pod restart to take effect.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openwebui-custom-css
+  namespace: assistant
+data:
+  custom.css: |
+    /* ─────────────────────────────────────────────────────────────────────────
+       Casa — a cold-console treatment for Open WebUI.
+    
+       Delivered through /static/custom.css, which the app shell links LAST, so
+       these rules win without patching the build or forking the image.
+    
+       Open WebUI's own branding is deliberately untouched: nothing here hides,
+       replaces or obscures its name or logo. Colour, glow and type only.
+    
+       The whole approach rests on one thing: Tailwind v4 exposes the neutral
+       ramp as oklch custom properties at ZERO chroma. Giving those a hue tints
+       every surface, border and muted text at once — far more robust than
+       chasing hundreds of utility classes that change between releases.
+       ───────────────────────────────────────────────────────────────────────── */
+    
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap');
+    
+    html.dark {
+      /* Deep blue-black, lifted toward cyan as it gets lighter. */
+      --color-gray-50:  oklch(97% 0.012 215);
+      --color-gray-100: oklch(93% 0.014 215);
+      --color-gray-200: oklch(89% 0.016 218);
+      --color-gray-300: oklch(82% 0.020 220);
+      --color-gray-400: oklch(72% 0.026 224);
+      --color-gray-500: oklch(63% 0.032 228);
+      --color-gray-600: oklch(50% 0.038 234);
+      --color-gray-700: oklch(38% 0.040 240);
+      --color-gray-800: oklch(27% 0.038 246);
+      --color-gray-850: oklch(22% 0.036 250);
+      --color-gray-900: oklch(17% 0.034 252);
+      --color-gray-950: oklch(12% 0.032 255);
+    
+      --casa-accent: #29E0FF;
+      --casa-accent-dim: rgba(41, 224, 255, 0.35);
+      --casa-grid: rgba(41, 224, 255, 0.055);
+    }
+    
+    /* A faint instrument grid behind everything, fixed so it reads as a surface
+       the app sits on rather than something that scrolls with the content. */
+    html.dark body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(var(--casa-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--casa-grid) 1px, transparent 1px),
+        radial-gradient(ellipse at 50% -10%, rgba(41, 224, 255, 0.10), transparent 60%);
+      background-size: 44px 44px, 44px 44px, 100% 100%;
+    }
+    html.dark body > * { position: relative; z-index: 1; }
+    
+    /* Labels and controls get the display face; body copy keeps the original
+       font, because chat text is read for minutes at a time and Rajdhani is a
+       display face, not a reading one. */
+    html.dark button,
+    html.dark [role="button"],
+    html.dark h1, html.dark h2, html.dark h3,
+    html.dark .text-xs,
+    html.dark input::placeholder,
+    html.dark textarea::placeholder {
+      font-family: "Rajdhani", "Noto Sans", ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0.02em;
+    }
+    html.dark .text-xs { text-transform: uppercase; letter-spacing: 0.08em; }
+    
+    /* Focus is a glow rather than a ring — the one place the accent is loud. */
+    html.dark :is(button, a, input, textarea, [tabindex]):focus-visible {
+      outline: 1px solid var(--casa-accent) !important;
+      outline-offset: 1px;
+      box-shadow: 0 0 0 3px var(--casa-accent-dim), 0 0 14px var(--casa-accent-dim) !important;
+    }
+    
+    /* The composer is the instrument you actually touch, so it gets the edge. */
+    html.dark form:focus-within,
+    html.dark div:has(> textarea#chat-input):focus-within {
+      border-color: var(--casa-accent-dim) !important;
+      box-shadow: 0 0 20px -4px var(--casa-accent-dim);
+    }
+    
+    /* Scrollbars, so the chrome matches the surface it sits on. */
+    html.dark ::-webkit-scrollbar-thumb {
+      background: oklch(32% 0.04 244);
+      border-radius: 999px;
+    }
+    html.dark ::-webkit-scrollbar-thumb:hover { background: var(--casa-accent-dim); }
+    html.dark * { scrollbar-color: oklch(32% 0.04 244) transparent; }
+    
+    /* Code and pre already read as machine output; give them the accent's edge. */
+    html.dark pre, html.dark code {
+      border-color: rgba(41, 224, 255, 0.18) !important;
+    }
+    
+    /* The assistant's own messages get a hairline left rule, so a long thread
+       scans as a transcript rather than a wall. */
+    html.dark .chat-assistant {
+      border-left: 1px solid rgba(41, 224, 255, 0.16);
+      padding-left: 0.85rem;
+    }
+    
+    /* Motion is a preference, not a decoration. */
+    @media (prefers-reduced-motion: reduce) {
+      html.dark *, html.dark *::before { animation: none !important; transition: none !important; }
+    }

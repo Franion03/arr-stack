@@ -143,6 +143,11 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /app/backend/data
+            # subPath so only this one file is replaced; mounting the whole
+            # static/ directory would hide the favicons, fonts and manifest.
+            - name: custom-css
+              mountPath: /app/backend/open_webui/static/custom.css
+              subPath: custom.css
           readinessProbe:
             httpGet: { path: /health, port: http }
             initialDelaySeconds: 15
@@ -157,6 +162,9 @@ spec:
             requests: { cpu: 200m, memory: 512Mi }
             limits:   { cpu: "2",  memory: 4Gi }
       volumes:
+        - name: custom-css
+          configMap:
+            name: openwebui-custom-css
         - name: data
           persistentVolumeClaim:
             claimName: openwebui-data
