@@ -4,7 +4,8 @@ metadata:
   name: assistant
   namespace: assistant
   annotations:
-    ingress.kubernetes.io/ssl-redirect: "false"
+    # cert-manager watches this and issues the certificate named in tls below.
+    cert-manager.io/cluster-issuer: letsencrypt
     # Audio uploads and document ingestion.
     nginx.ingress.kubernetes.io/proxy-body-size: "100m"
     # Open WebUI streams responses over SSE and uses websockets; buffering
@@ -14,7 +15,27 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
 spec:
   ingressClassName: nginx
+  tls:
+    # The microphone is the whole reason for this: getUserMedia only runs in
+    # a secure context, so plain http over the nip.io name can never capture
+    # audio. The name resolves to 192.168.1.114 and is not reachable from
+    # outside; only the certificate is public.
+    - hosts:
+        - casa.calzadoskiruz.com
+      secretName: casa-tls
   rules:
+    - host: casa.calzadoskiruz.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: openwebui
+                port:
+                  number: 80
+    # Kept for access by IP when DNS is not cooperating. http only, so no
+    # microphone here.
     - host: assistant.192.168.1.114.nip.io
       http:
         paths:

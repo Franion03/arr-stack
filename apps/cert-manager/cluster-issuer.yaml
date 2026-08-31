@@ -1,0 +1,26 @@
+# Certificates are issued over DNS-01, never HTTP-01.
+#
+# HTTP-01 would require Let's Encrypt to reach the ingress from the internet,
+# which is exactly what we are not doing -- casa.calzadoskiruz.com resolves to
+# 192.168.1.114, a private address. DNS-01 only needs a TXT record in
+# Cloudflare, so the cluster stays unreachable from outside and the browser
+# still gets a publicly trusted certificate. That is what the microphone
+# needs: getUserMedia refuses to run outside a secure context.
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: fran.quiles00@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-account-key
+    solvers:
+      - dns01:
+          cloudflare:
+            # A ClusterIssuer reads its secrets from cert-manager's own
+            # namespace, not from the namespace of the Certificate.
+            apiTokenSecretRef:
+              name: cloudflare-dns-token
+              key: token

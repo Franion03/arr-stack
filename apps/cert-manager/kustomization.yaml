@@ -1,0 +1,18 @@
+# cert-manager, pinned. Upgrades are a deliberate edit of the tag below.
+#
+# The release manifest ships CRDs whose schemas exceed the 256KB annotation
+# limit that client-side apply writes into
+# kubectl.kubernetes.io/last-applied-configuration. ServerSideApply avoids
+# that annotation entirely, so it is required here, not optional.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonAnnotations:
+  argocd.argoproj.io/sync-options: ServerSideApply=true
+  # Install ahead of the default wave, so the CRDs exist before any
+  # Ingress asks for a certificate.
+  argocd.argoproj.io/sync-wave: "-1"
+
+resources:
+  - https://github.com/cert-manager/cert-manager/releases/download/v1.21.1/cert-manager.yaml
+  - cluster-issuer.yaml
