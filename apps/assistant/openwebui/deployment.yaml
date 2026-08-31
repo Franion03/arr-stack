@@ -37,7 +37,7 @@ spec:
                 configMapKeyRef: { name: openwebui-config, key: OPENAI_API_BASE_URL }
             - name: OPENAI_API_KEY
               valueFrom:
-                secretKeyRef: { name: harness-secrets, key: ANTHROPIC_API_KEY }
+                secretKeyRef: { name: harness-secrets, key: GOOGLE_AI_API_KEY }
             # The gateway is an *authenticated* one: Cloudflare rejects with
             # its own 401 before forwarding unless cf-aig-authorization is
             # present. Open WebUI attaches per-connection custom headers from

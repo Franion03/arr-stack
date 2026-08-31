@@ -16,13 +16,13 @@ data:
   #
   #   anthropic         .../anthropic/v1        (ANTHROPIC_API_KEY)
   #   openai            .../openai/v1           (OPENAI_API_KEY)
-  #   google-ai-studio  .../google-ai-studio/v1 (GOOGLE_AI_API_KEY)
+  #   google-ai-studio  .../google-ai-studio/v1beta/openai (GOOGLE_AI_API_KEY)
   #   openrouter        .../openrouter/v1       (OPENROUTER_API_KEY)
   #
   # Set it to the vendor's own URL to bypass the gateway entirely, e.g.
   # https://api.anthropic.com/v1
   # ─────────────────────────────────────────────────────────────────────
-  OPENAI_API_BASE_URL: "https://gateway.ai.cloudflare.com/v1/a64d697589a565c03774f1962f7cbf96/home-harness/anthropic/v1"
+  OPENAI_API_BASE_URL: "https://gateway.ai.cloudflare.com/v1/a64d697589a565c03774f1962f7cbf96/home-harness/google-ai-studio/v1beta/openai"
 
   # Speech always goes to OpenAI, whichever vendor answers the chat.
   OPENAI_AUDIO_BASE_URL: "https://gateway.ai.cloudflare.com/v1/a64d697589a565c03774f1962f7cbf96/home-harness/openai/v1"
