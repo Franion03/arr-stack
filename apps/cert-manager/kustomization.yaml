@@ -25,3 +25,18 @@ resources:
   - https://github.com/cert-manager/cert-manager/releases/download/v1.21.1/cert-manager.yaml
   - sealed-secret.yaml
   - cluster-issuer.yaml
+
+# cert-manager stamps app.kubernetes.io/instance=cert-manager on its own
+# resources. ArgoCD tracks ownership by that exact label, so it concludes the
+# CRDs belong to an Application called "cert-manager" -- which does not exist
+# -- raises SharedResourceWarning, and refuses to reconcile them. Strip it and
+# ArgoCD writes its own value.
+#
+# Only metadata labels are touched: Deployment selectors and pod templates
+# keep theirs, so cert-manager's own matching is unaffected.
+patches:
+  - target:
+      labelSelector: app.kubernetes.io/instance=cert-manager
+    patch: |-
+      - op: remove
+        path: /metadata/labels/app.kubernetes.io~1instance
