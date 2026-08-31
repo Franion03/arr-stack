@@ -15,4 +15,5 @@ commonAnnotations:
 
 resources:
   - https://github.com/cert-manager/cert-manager/releases/download/v1.21.1/cert-manager.yaml
+  - sealed-secret.yaml
   - cluster-issuer.yaml
