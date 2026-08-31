@@ -71,8 +71,10 @@ for name in $KEYS; do
     if [ "$DRY" = "1" ]; then
       echo "  [org $ORG] $name (${#value} chars)"
     else
+      # No --body: gh reads the value from stdin. "--body -" does not mean
+      # stdin, it sets the secret to the literal string "-".
       printf '%s' "$value" | gh secret set "$name" --org "$ORG" \
-        --visibility selected --repos "$(IFS=,; echo "${REPOS[*]}")" --body -
+        --visibility selected --repos "$(IFS=,; echo "${REPOS[*]}")"
     fi
     applied=$((applied + 1))
   else
@@ -80,7 +82,7 @@ for name in $KEYS; do
       if [ "$DRY" = "1" ]; then
         echo "  [$repo] $name (${#value} chars)"
       else
-        printf '%s' "$value" | gh secret set "$name" --repo "$repo" --body -
+        printf '%s' "$value" | gh secret set "$name" --repo "$repo"
       fi
     done
     applied=$((applied + 1))
