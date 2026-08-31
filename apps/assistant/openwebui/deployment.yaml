@@ -106,6 +106,19 @@ spec:
             - name: AUDIO_TTS_VOICE
               value: "alloy"
 
+            # Attach the house tools to every model by default, so they no
+            # longer have to be switched on per chat. Applied as a global
+            # model default: a model that sets its own toolIds still wins.
+            # "server:0" is the tool server declared in
+            # TOOL_SERVER_CONNECTIONS -- the index, not a name, so this must
+            # be revisited if a second tool server is ever added ahead of it.
+            #
+            # Costs roughly 1.6k prompt tokens per request for the nine tool
+            # definitions, on every model, including chats that never touch
+            # the house.
+            - name: DEFAULT_MODEL_METADATA
+              value: '{"toolIds":["server:0"]}'
+
             # ── Instance ────────────────────────────────────────────────
             - name: WEBUI_NAME
               value: "Casa"
