@@ -2,9 +2,10 @@
 # must not cost every panel. allowUiUpdates is false, so edits made in the
 # browser are discarded -- change this file instead.
 #
-# Panels match entity_id by REGEX rather than exact name, because the ids
-# do not exist yet: they appear once the HA companion app starts publishing
-# Health Connect sensors. Tighten them once the real ids are known.
+# Panels match entity_id by REGEX rather than exact name. Home Assistant is
+# connected and writing, but the Health Connect sensors are not enabled in the
+# companion app yet, so the real ids are still unknown. Tighten these once they
+# appear -- the regexes are a bridge, not the destination.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -327,6 +328,59 @@ data:
         },
         {
           "type": "timeseries",
+          "title": "Body fat",
+          "description": "Its own panel, not a second axis on weight: kg and % share no scale, and a dual axis invites a comparison the data does not support.",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb"
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 24,
+            "x": 0,
+            "y": 12
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "influxdb"
+              },
+              "refId": "A",
+              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /body_fat|bodyfat|fat_percent/)\n  |> aggregateWindow(every: 1d, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])"
+            }
+          ],
+          "options": {
+            "legend": {
+              "displayMode": "hidden",
+              "showLegend": false
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "decimals": 1,
+              "custom": {
+                "drawStyle": "line",
+                "lineWidth": 2,
+                "fillOpacity": 8,
+                "pointSize": 8,
+                "showPoints": "auto",
+                "spanNulls": true,
+                "axisGridShow": true,
+                "axisBorderShow": false,
+                "gradientMode": "none"
+              }
+            },
+            "overrides": []
+          }
+        },
+        {
+          "type": "timeseries",
           "title": "Sleep duration per night",
           "description": "One bar per night. A line would imply sleep varies continuously between nights.",
           "datasource": {
@@ -337,7 +391,7 @@ data:
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 12
+            "y": 19
           },
           "targets": [
             {
@@ -391,7 +445,7 @@ data:
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 12
+            "y": 19
           },
           "targets": [
             {
@@ -445,7 +499,7 @@ data:
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 20
+            "y": 27
           },
           "targets": [
             {
