@@ -32,12 +32,16 @@ spec:
             # Anthropic through the Cloudflare AI Gateway, via its
             # OpenAI-compatible endpoint. Swapping vendor is a change to
             # these two values and nothing else.
-            - name: OPENAI_API_BASE_URL
+            # Plural: Open WebUI prefers *_URLS/*_KEYS over the singular
+            # forms and splits both on ';'. The keys are joined into one
+            # Secret value by the seal workflow, because a Deployment env var
+            # cannot concatenate two Secret keys.
+            - name: OPENAI_API_BASE_URLS
               valueFrom:
-                configMapKeyRef: { name: openwebui-config, key: OPENAI_API_BASE_URL }
-            - name: OPENAI_API_KEY
+                configMapKeyRef: { name: openwebui-config, key: OPENAI_API_BASE_URLS }
+            - name: OPENAI_API_KEYS
               valueFrom:
-                secretKeyRef: { name: harness-secrets, key: GOOGLE_AI_API_KEY }
+                secretKeyRef: { name: harness-secrets, key: OPENAI_API_KEYS }
             # The gateway is an *authenticated* one: Cloudflare rejects with
             # its own 401 before forwarding unless cf-aig-authorization is
             # present. Open WebUI attaches per-connection custom headers from
