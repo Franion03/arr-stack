@@ -2,6 +2,11 @@
 # must not cost every panel. allowUiUpdates is false, so edits made in the
 # browser are discarded -- change this file instead.
 #
+# No "version" key on purpose. Grafana bumps the stored version on every
+# provision, then SKIPS any file whose version is not greater -- so a
+# dashboard with a fixed version silently stops updating after the first
+# deploy, with no error anywhere. Omitting it makes the file always win.
+#
 # Panels match entity_id by REGEX rather than exact name. Home Assistant is
 # connected and writing, but the Health Connect sensors are not enabled in the
 # companion app yet, so the real ids are still unknown. Tighten these once they
@@ -22,7 +27,6 @@ data:
       ],
       "timezone": "Europe/Madrid",
       "schemaVersion": 39,
-      "version": 1,
       "editable": false,
       "refresh": "5m",
       "time": {
