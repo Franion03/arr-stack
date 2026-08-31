@@ -404,7 +404,7 @@ data:
                 "uid": "influxdb"
               },
               "refId": "A",
-              "query": "from(bucket: \"health\")\n  |> range(start: -60d)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /weight|body_fat|lean|bone_mass/)\n  |> last()\n  |> keep(columns: [\"entity_id\", \"_value\"])"
+              "query": "from(bucket: \"health\")\n  |> range(start: -60d)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /weight|body_fat|lean|bone_mass/)\n  |> last()\n  |> group()\n  |> keep(columns: [\"entity_id\", \"_value\"])"
             }
           ],
           "options": {
