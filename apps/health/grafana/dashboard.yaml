@@ -53,7 +53,7 @@ data:
                 "type": "influxdb",
                 "uid": "influxdb"
               },
-              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /weight|peso|body_mass/)\n  |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
+              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /weight$/)\n  |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
               "refId": "A"
             }
           ],
@@ -103,7 +103,7 @@ data:
                 "type": "influxdb",
                 "uid": "influxdb"
               },
-              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /resting_heart_rate|heart_rate/)\n  |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
+              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /resting_heart_rate$/)\n  |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
               "refId": "A"
             }
           ],
@@ -153,7 +153,7 @@ data:
                 "type": "influxdb",
                 "uid": "influxdb"
               },
-              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /sleep_duration|sleep_time|total_sleep/)\n  |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
+              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /sleep_duration$/)\n  |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
               "refId": "A"
             }
           ],
@@ -203,7 +203,7 @@ data:
                 "type": "influxdb",
                 "uid": "influxdb"
               },
-              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /steps|step_count/)\n  |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
+              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /steps$/)\n  |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
               "refId": "A"
             }
           ],
@@ -254,7 +254,7 @@ data:
                 "type": "influxdb",
                 "uid": "influxdb"
               },
-              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /weight|peso|body_mass/)\n  |> aggregateWindow(every: 1d, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
+              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /weight$/)\n  |> aggregateWindow(every: 1d, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
               "refId": "A"
             }
           ],
@@ -319,7 +319,7 @@ data:
                 "type": "influxdb",
                 "uid": "influxdb"
               },
-              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /resting_heart_rate|heart_rate/)\n  |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
+              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /resting_heart_rate$/)\n  |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
               "refId": "A"
             }
           ],
@@ -385,7 +385,7 @@ data:
                 "uid": "influxdb"
               },
               "refId": "A",
-              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /body_fat|bodyfat|fat_percent/)\n  |> aggregateWindow(every: 1d, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])"
+              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /body_fat$/)\n  |> aggregateWindow(every: 1d, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])"
             }
           ],
           "options": {
@@ -450,7 +450,7 @@ data:
                 "uid": "influxdb"
               },
               "refId": "A",
-              "query": "from(bucket: \"health\")\n  |> range(start: -60d)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /weight|body_fat|lean|bone_mass/)\n  |> last()\n  |> group()\n  |> keep(columns: [\"entity_id\", \"_value\"])"
+              "query": "from(bucket: \"health\")\n  |> range(start: -60d)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /(weight|body_fat|lean_body_mass|bone_mass)$/)\n  |> last()\n  |> group()\n  |> keep(columns: [\"entity_id\", \"_value\"])"
             }
           ],
           "options": {
@@ -486,7 +486,7 @@ data:
                 "type": "influxdb",
                 "uid": "influxdb"
               },
-              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /sleep_duration|sleep_time|total_sleep/)\n  |> aggregateWindow(every: 1d, fn: max, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
+              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /sleep_duration$/)\n  |> aggregateWindow(every: 1d, fn: max, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
               "refId": "A"
             }
           ],
@@ -553,7 +553,7 @@ data:
                 "type": "influxdb",
                 "uid": "influxdb"
               },
-              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /steps|step_count/)\n  |> aggregateWindow(every: 1d, fn: max, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
+              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /steps$/)\n  |> aggregateWindow(every: 1d, fn: max, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])",
               "refId": "A"
             }
           ],
@@ -601,16 +601,16 @@ data:
           }
         },
         {
-          "type": "barchart",
-          "title": "Sleep stages per night",
-          "description": "Stacked hours per night. Depth is ordered, so Deep/Light/REM share one hue ramp; Awake is outside that order and takes its own.",
+          "type": "timeseries",
+          "title": "Active energy",
+          "description": "Daily active calories. Bars, because it is a per-day total.",
           "datasource": {
             "type": "influxdb",
             "uid": "influxdb"
           },
           "gridPos": {
-            "h": 9,
-            "w": 24,
+            "h": 8,
+            "w": 8,
             "x": 0,
             "y": 34
           },
@@ -621,115 +621,163 @@ data:
                 "uid": "influxdb"
               },
               "refId": "A",
-              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /sleep_(deep|light|rem|awake)/)\n  |> aggregateWindow(every: 1d, fn: max, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])"
+              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /active_calories_burned$/)\n  |> aggregateWindow(every: 1d, fn: max, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])"
             }
           ],
           "options": {
-            "stacking": "normal",
-            "showValue": "never",
-            "xTickLabelRotation": 0,
             "legend": {
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
+              "displayMode": "hidden",
+              "showLegend": false
             },
             "tooltip": {
-              "mode": "multi",
+              "mode": "single",
               "sort": "none"
             }
           },
           "fieldConfig": {
             "defaults": {
-              "unit": "h",
-              "decimals": 1,
+              "unit": "kcal",
+              "decimals": 0,
+              "color": {
+                "mode": "fixed",
+                "fixedColor": "#FF9500"
+              },
               "custom": {
+                "drawStyle": "bars",
                 "lineWidth": 0,
-                "fillOpacity": 100,
+                "lineInterpolation": "smooth",
+                "fillOpacity": 85,
                 "gradientMode": "none",
-                "axisBorderShow": false,
+                "pointSize": 6,
+                "showPoints": "never",
+                "spanNulls": true,
                 "axisGridShow": false,
+                "axisBorderShow": false,
                 "barRadius": 0.25,
-                "barWidth": 0.7
+                "barWidthFactor": 0.7
               }
             },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byRegexp",
-                  "options": ".*deep.*"
-                },
-                "properties": [
-                  {
-                    "id": "displayName",
-                    "value": "Deep"
-                  },
-                  {
-                    "id": "color",
-                    "value": {
-                      "mode": "fixed",
-                      "fixedColor": "#3A2E8C"
-                    }
-                  }
-                ]
+            "overrides": []
+          }
+        },
+        {
+          "type": "timeseries",
+          "title": "Respiratory rate",
+          "description": "Breaths per minute, measured overnight.",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 34
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "influxdb"
               },
-              {
-                "matcher": {
-                  "id": "byRegexp",
-                  "options": ".*light.*"
-                },
-                "properties": [
-                  {
-                    "id": "displayName",
-                    "value": "Light"
-                  },
-                  {
-                    "id": "color",
-                    "value": {
-                      "mode": "fixed",
-                      "fixedColor": "#5E5CE6"
-                    }
-                  }
-                ]
+              "refId": "A",
+              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /respiratory_rate$/)\n  |> aggregateWindow(every: 1d, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])"
+            }
+          ],
+          "options": {
+            "legend": {
+              "displayMode": "hidden",
+              "showLegend": false
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "none",
+              "decimals": 1,
+              "color": {
+                "mode": "fixed",
+                "fixedColor": "#64D2FF"
               },
-              {
-                "matcher": {
-                  "id": "byRegexp",
-                  "options": ".*rem.*"
-                },
-                "properties": [
-                  {
-                    "id": "displayName",
-                    "value": "REM"
-                  },
-                  {
-                    "id": "color",
-                    "value": {
-                      "mode": "fixed",
-                      "fixedColor": "#A5A3F5"
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byRegexp",
-                  "options": ".*awake.*"
-                },
-                "properties": [
-                  {
-                    "id": "displayName",
-                    "value": "Awake"
-                  },
-                  {
-                    "id": "color",
-                    "value": {
-                      "mode": "fixed",
-                      "fixedColor": "#FF9F0A"
-                    }
-                  }
-                ]
+              "custom": {
+                "drawStyle": "line",
+                "lineWidth": 3,
+                "lineInterpolation": "smooth",
+                "fillOpacity": 18,
+                "gradientMode": "opacity",
+                "pointSize": 6,
+                "showPoints": "never",
+                "spanNulls": true,
+                "axisGridShow": false,
+                "axisBorderShow": false,
+                "barRadius": 0,
+                "barWidthFactor": 0.7
               }
-            ]
+            },
+            "overrides": []
+          }
+        },
+        {
+          "type": "timeseries",
+          "title": "VO2 max",
+          "description": "Estimated aerobic capacity. Moves slowly \u2014 read months, not days.",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 34
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "influxdb"
+              },
+              "refId": "A",
+              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /vo2_max$/)\n  |> aggregateWindow(every: 1d, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])"
+            }
+          ],
+          "options": {
+            "legend": {
+              "displayMode": "hidden",
+              "showLegend": false
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "none",
+              "decimals": 1,
+              "color": {
+                "mode": "fixed",
+                "fixedColor": "#34C759"
+              },
+              "custom": {
+                "drawStyle": "line",
+                "lineWidth": 3,
+                "lineInterpolation": "smooth",
+                "fillOpacity": 18,
+                "gradientMode": "opacity",
+                "pointSize": 6,
+                "showPoints": "never",
+                "spanNulls": true,
+                "axisGridShow": false,
+                "axisBorderShow": false,
+                "barRadius": 0,
+                "barWidthFactor": 0.7
+              }
+            },
+            "overrides": []
           }
         },
         {
@@ -744,7 +792,7 @@ data:
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 43
+            "y": 42
           },
           "targets": [
             {
@@ -753,7 +801,7 @@ data:
                 "uid": "influxdb"
               },
               "refId": "A",
-              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /oxygen_saturation|spo2/)\n  |> aggregateWindow(every: 1d, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])"
+              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /oxygen_saturation$/)\n  |> aggregateWindow(every: 1d, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])"
             }
           ],
           "options": {
@@ -809,7 +857,7 @@ data:
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 43
+            "y": 42
           },
           "targets": [
             {
@@ -818,7 +866,7 @@ data:
                 "uid": "influxdb"
               },
               "refId": "A",
-              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /heart_rate_variability|hrv/)\n  |> aggregateWindow(every: 1d, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])"
+              "query": "from(bucket: \"health\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /heart_rate_variability$/)\n  |> aggregateWindow(every: 1d, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"entity_id\"])"
             }
           ],
           "options": {
@@ -874,7 +922,7 @@ data:
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 51
+            "y": 50
           },
           "targets": [
             {
