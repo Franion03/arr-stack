@@ -25,5 +25,6 @@ namespace: health
 
 resources:
   - namespace.yaml
+  - sealed-secret.yaml
   - influxdb/
   - grafana/
