@@ -28,6 +28,20 @@ spec:
           env:
             # Only the credentials this server actually uses. No model-vendor
             # key is mounted here — it never talks to an LLM.
+            # Body metrics, read-only. InfluxDB lives in the `health` namespace;
+            # nothing writes from here -- Home Assistant does that. The token is
+            # the same InfluxDB admin token the health stack was created with,
+            # carried into this namespace by the seal workflow.
+            - name: INFLUXDB_URL
+              value: "http://influxdb.health.svc.cluster.local:8086"
+            - name: INFLUXDB_ORG
+              value: "casa"
+            - name: INFLUXDB_BUCKET
+              value: "health"
+            - name: INFLUXDB_TOKEN
+              valueFrom:
+                secretKeyRef: { name: harness-secrets, key: INFLUXDB_ADMIN_TOKEN }
+
             - name: HA_URL
               valueFrom:
                 secretKeyRef: { name: harness-secrets, key: HA_URL }
