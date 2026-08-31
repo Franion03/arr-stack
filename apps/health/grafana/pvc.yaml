@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-data
+  namespace: health
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      # Only Grafana's own sqlite (users, preferences). Dashboards and the
+      # datasource are provisioned from ConfigMaps, so losing this costs
+      # nothing but the login.
+      storage: 1Gi

@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: influxdb
+  namespace: health
+  labels:
+    app: influxdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: influxdb
+  strategy:
+    type: Recreate          # single RWO volume
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: influxdb
+          # 2.x, not 3.x: Home Assistant's InfluxDB integration speaks 1.x and
+          # 2.x. Moving to 3 would mean rewriting the HA side for no gain at
+          # this data volume.
+          image: influxdb:2.7-alpine
+          ports:
+            - name: http
+              containerPort: 8086
+          env:
+            # Runs only on an empty volume; ignored on every later start.
+            - name: DOCKER_INFLUXDB_INIT_MODE
+              value: "setup"
+            - name: DOCKER_INFLUXDB_INIT_USERNAME
+              value: "casa"
+            - name: DOCKER_INFLUXDB_INIT_ORG
+              value: "casa"
+            - name: DOCKER_INFLUXDB_INIT_BUCKET
+              value: "health"
+            # No expiry. This is the only long-term copy of the data.
+            - name: DOCKER_INFLUXDB_INIT_RETENTION
+              value: "0"
+            - name: DOCKER_INFLUXDB_INIT_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: health-secrets, key: INFLUXDB_ADMIN_PASSWORD }
+            # What Home Assistant and Grafana authenticate with.
+            - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef: { name: health-secrets, key: INFLUXDB_ADMIN_TOKEN }
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "256Mi"
+            limits:
+              cpu: "2"
+              memory: "2Gi"
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/influxdb2
+          readinessProbe:
+            httpGet: { path: /health, port: http }
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          livenessProbe:
+            httpGet: { path: /health, port: http }
+            initialDelaySeconds: 60
+            periodSeconds: 30
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: influxdb-data

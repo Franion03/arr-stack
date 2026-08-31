@@ -1,0 +1,29 @@
+# The health stack: where body metrics are stored and drawn.
+#
+#   influxdb  the long-term archive. Health Connect on the phone prunes
+#             itself after ~30 days, so this is the ONLY durable copy --
+#             a sync outage longer than that is permanent data loss.
+#   grafana   the dashboard, LAN-only.
+#
+# Data path (the phone is unavoidably in it -- Health Connect has no cloud
+# API, so it is the one place all four sources meet):
+#
+#   watch -> Huawei Health -> Health Sync -> Health Connect ─┐
+#   scale, phone, Sleep as Android ──────────────────────────┤
+#                                                            v
+#          HA companion app -> Home Assistant (192.168.1.117)
+#                                  |  InfluxDB integration, entity-filtered
+#                                  v
+#                            influxdb -> grafana
+#
+# arr-stack-root's destination namespace is `media`, so `health` is pinned
+# here and on every resource.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: health
+
+resources:
+  - namespace.yaml
+  - influxdb/
+  - grafana/

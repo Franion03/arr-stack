@@ -1,0 +1,41 @@
+# Datasource and dashboard provider, both from git.
+#
+# The point of provisioning: a Grafana database loss must not mean rebuilding
+# panels by hand. Anything defined here is recreated on the next start.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-provisioning
+  namespace: health
+data:
+  datasource.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: InfluxDB
+        type: influxdb
+        access: proxy
+        url: http://influxdb.health.svc.cluster.local:8086
+        isDefault: true
+        jsonData:
+          # Flux, not InfluxQL: InfluxDB 2 buckets are not queryable with
+          # InfluxQL without a compatibility mapping.
+          version: Flux
+          organization: casa
+          defaultBucket: health
+          tlsSkipVerify: true
+        secureJsonData:
+          # Grafana expands $VAR from the environment in provisioning files.
+          token: $INFLUXDB_ADMIN_TOKEN
+        editable: false
+  dashboards.yaml: |
+    apiVersion: 1
+    providers:
+      - name: casa
+        orgId: 1
+        folder: Casa
+        type: file
+        disableDeletion: true
+        updateIntervalSeconds: 30
+        allowUiUpdates: false
+        options:
+          path: /var/lib/grafana/dashboards

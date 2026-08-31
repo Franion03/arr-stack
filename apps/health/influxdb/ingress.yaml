@@ -1,0 +1,27 @@
+# Home Assistant lives on a different box (192.168.1.117) and is not in the
+# cluster, so it cannot use the ClusterIP -- it needs a routable address to
+# write to. nip.io resolves to 192.168.1.114, a private address, so this is
+# reachable on the LAN and nowhere else.
+#
+# Deliberately plain http and a nip.io name: it must NOT share the hostname
+# or the certificate with anything published through the tunnel.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: influxdb
+  namespace: health
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "32m"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: influxdb.192.168.1.114.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: influxdb
+                port:
+                  number: 8086

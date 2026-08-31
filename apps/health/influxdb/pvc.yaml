@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: influxdb-data
+  namespace: health
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      # Personal biometrics are tiny -- a handful of points a minute is well
+      # under a gigabyte a year. This is years of headroom, and local-path
+      # cannot expand, so it is deliberately generous.
+      storage: 10Gi
