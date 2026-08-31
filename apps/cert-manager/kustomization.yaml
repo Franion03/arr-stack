@@ -1,14 +1,22 @@
 # cert-manager, pinned. Upgrades are a deliberate edit of the tag below.
 #
-# The release manifest ships CRDs whose schemas exceed the 256KB annotation
-# limit that client-side apply writes into
-# kubectl.kubernetes.io/last-applied-configuration. ServerSideApply avoids
-# that annotation entirely, so it is required here, not optional.
+# The release manifest ships CRDs whose schemas exceed the 256KB limit on
+# kubectl.kubernetes.io/last-applied-configuration, so plain client-side
+# apply cannot install them.
+#
+# ServerSideApply is the usual answer and it is NOT usable here: this
+# ArgoCD runs gitops-engine v0.7.1, whose structuredMergeDiff panics with a
+# nil pointer dereference on these CRDs. Because arr-stack-root is a single
+# Application covering every app, that panic stops the whole stack syncing,
+# with `OutOfSync` and a stale revision as the only visible symptom.
+#
+# Replace uses `kubectl replace`, which writes no last-applied annotation
+# and takes the ordinary diff path. Both problems, one option.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 commonAnnotations:
-  argocd.argoproj.io/sync-options: ServerSideApply=true
+  argocd.argoproj.io/sync-options: Replace=true
   # Install ahead of the default wave, so the CRDs exist before any
   # Ingress asks for a certificate.
   argocd.argoproj.io/sync-wave: "-1"
