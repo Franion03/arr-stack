@@ -12,6 +12,10 @@ data:
     apiVersion: 1
     datasources:
       - name: InfluxDB
+        # Pinned, not generated. The dashboard JSON refers to the datasource by
+        # uid, and an auto-assigned one changes per install -- every panel then
+        # renders "datasource not found".
+        uid: influxdb
         type: influxdb
         access: proxy
         url: http://influxdb.health.svc.cluster.local:8086
