@@ -70,29 +70,41 @@ spec:
             - name: ENABLE_OLLAMA_API
               value: "false"
 
-            # ── Speech ──────────────────────────────────────────────────
+            # ── Speech: both halves run locally and cost nothing ────────
+            #
+            # Open WebUI's audio router hardcodes its headers, so it can never
+            # use the authenticated Cloudflare gateway -- speech had to be
+            # either a direct vendor key or local. Local it is.
+
+            # An empty engine means the built-in faster-whisper, in this pod.
+            # The model lands on the existing PVC under
+            # data/cache/whisper/models, so it survives restarts; the first
+            # transcription after a fresh volume pays a ~140MB download.
+            #
+            # `base` runs about 7-10x realtime on this i7-7700 (AVX2, no
+            # AVX-512), so a 10s command comes back in a second or so. `small`
+            # is more accurate at 3-4x realtime; `medium` is roughly realtime
+            # and feels sluggish.
             - name: AUDIO_STT_ENGINE
-              value: "openai"
-            - name: AUDIO_STT_OPENAI_API_BASE_URL
-              valueFrom:
-                configMapKeyRef: { name: openwebui-config, key: OPENAI_AUDIO_BASE_URL }
-            - name: AUDIO_STT_OPENAI_API_KEY
-              valueFrom:
-                secretKeyRef: { name: harness-secrets, key: OPENAI_API_KEY }
-            - name: AUDIO_STT_MODEL
-              value: "gpt-4o-transcribe"
+              value: ""
+            - name: WHISPER_MODEL
+              value: "base"
+
+            # Piper, behind an OpenAI-compatible API in the tts Deployment.
+            # The engine stays "openai" -- only the URL changes.
             - name: AUDIO_TTS_ENGINE
               value: "openai"
             - name: AUDIO_TTS_OPENAI_API_BASE_URL
-              valueFrom:
-                configMapKeyRef: { name: openwebui-config, key: OPENAI_AUDIO_BASE_URL }
+              value: "http://tts.assistant.svc.cluster.local/v1"
+            # openedai-speech ignores the key, but Open WebUI will not send a
+            # request without one.
             - name: AUDIO_TTS_OPENAI_API_KEY
-              valueFrom:
-                secretKeyRef: { name: harness-secrets, key: OPENAI_API_KEY }
+              value: "sk-local"
             - name: AUDIO_TTS_MODEL
               value: "tts-1"
+            # openedai-speech maps the OpenAI voice names onto Piper voices.
             - name: AUDIO_TTS_VOICE
-              value: "nova"
+              value: "alloy"
 
             # ── Instance ────────────────────────────────────────────────
             - name: WEBUI_NAME

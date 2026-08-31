@@ -43,3 +43,24 @@ spec:
       ports:
         - port: 8080
           protocol: TCP
+---
+# Nothing but Open WebUI has any reason to synthesise speech.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tts-ingress
+  namespace: assistant
+spec:
+  podSelector:
+    matchLabels:
+      app: tts
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: openwebui
+      ports:
+        - port: 8000
+          protocol: TCP

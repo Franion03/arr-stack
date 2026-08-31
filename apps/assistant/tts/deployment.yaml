@@ -1,0 +1,69 @@
+# Piper text-to-speech, wrapped in an OpenAI-compatible API.
+#
+# Open WebUI's audio router only speaks a handful of vendor dialects, and its
+# `transformers` engine (SpeechT5) is both slower and more robotic than Piper.
+# openedai-speech serves /v1/audio/speech, so Open WebUI keeps
+# AUDIO_TTS_ENGINE=openai and only the URL changes -- no vendor key, no code.
+#
+# The -min image is Piper only: no torch, no Coqui, a fraction of the size.
+#
+# This node is an i7-7700: AVX2 and FMA but no AVX-512. Piper synthesises at
+# roughly 0.2x realtime there, so a sentence comes back in well under a
+# second. Kokoro would sound better and cost a few seconds per reply.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tts
+  namespace: assistant
+  labels:
+    app: tts
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tts
+  strategy:
+    type: Recreate          # one RWO volume of voice models
+  template:
+    metadata:
+      labels:
+        app: tts
+    spec:
+      securityContext:
+        # Voice models are downloaded on first use, so the mount must be
+        # group-writable by whatever uid the image runs as.
+        fsGroup: 1000
+      containers:
+        - name: tts
+          image: ghcr.io/matatonic/openedai-speech-min:latest
+          ports:
+            - name: http
+              containerPort: 8000
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              # Piper is CPU-bound and short-lived per request. Two cores
+              # keeps synthesis snappy without starving Jellyfin transcodes.
+              cpu: "2"
+              memory: "1Gi"
+          volumeMounts:
+            - name: voices
+              mountPath: /app/voices
+          startupProbe:
+            # First boot downloads a voice model; be generous before failing.
+            httpGet: { path: /v1/models, port: http }
+            periodSeconds: 10
+            failureThreshold: 30
+          readinessProbe:
+            httpGet: { path: /v1/models, port: http }
+            periodSeconds: 20
+      volumes:
+        - name: voices
+          persistentVolumeClaim:
+            claimName: tts-voices
