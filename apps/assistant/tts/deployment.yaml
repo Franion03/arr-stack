@@ -35,7 +35,8 @@ spec:
         fsGroup: 1000
       containers:
         - name: tts
-          image: ghcr.io/matatonic/openedai-speech-min:latest
+          # Pinned by digest -- see the note in harness/deployment.yaml.
+          image: ghcr.io/matatonic/openedai-speech-min:latest@sha256:e82d719252fb1b861967f4f9abb8513f028ab9c1139451245688dbf34992b060
           ports:
             - name: http
               containerPort: 8000

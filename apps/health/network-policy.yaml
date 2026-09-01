@@ -1,0 +1,95 @@
+# This namespace holds body metrics -- weight, heart rate, sleep -- in a
+# cluster that also runs a Cloudflare tunnel for the media stack. It had no
+# NetworkPolicy at all, so any pod anywhere in the cluster could read or write
+# the whole bucket. InfluxDB is also the ONLY durable copy: Health Connect
+# prunes itself after ~30 days, so a write from the wrong place is not
+# recoverable from the phone.
+#
+# k3s enforces NetworkPolicy out of the box (kube-router).
+#
+# Ingress only, deliberately. An egress policy here would also have to allow
+# DNS, and getting that wrong breaks InfluxDB in a way that looks like a
+# storage fault rather than a network one.
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: health
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+---
+# InfluxDB has exactly three legitimate clients. The third is easy to miss:
+# the harness reads it over cluster DNS at
+# influxdb.health.svc.cluster.local:8086 (INFLUXDB_URL in
+# apps/assistant/harness/deployment.yaml), NOT through the Ingress -- so an
+# ingress-controller-only policy would silently break "how did I sleep last
+# week" while every dashboard kept working.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: influxdb-ingress
+  namespace: health
+spec:
+  podSelector:
+    matchLabels:
+      app: influxdb
+  policyTypes:
+    - Ingress
+  ingress:
+    # 1. Grafana, in this namespace, rendering the dashboards.
+    - from:
+        - podSelector:
+            matchLabels:
+              app: grafana
+      ports:
+        - port: 8086
+          protocol: TCP
+
+    # 2. Home Assistant at 192.168.1.117, writing body metrics in through the
+    #    Ingress. HA is outside the cluster, so the traffic arrives from the
+    #    ingress-nginx controller, never from the LAN address directly.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - port: 8086
+          protocol: TCP
+
+    # 3. The harness tool server, so the assistant can answer questions about
+    #    the metrics.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: assistant
+          podSelector:
+            matchLabels:
+              app: harness
+      ports:
+        - port: 8086
+          protocol: TCP
+---
+# Grafana is reached only by a browser on the LAN, which arrives through the
+# Ingress. Nothing in the cluster calls it.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: grafana-ingress
+  namespace: health
+spec:
+  podSelector:
+    matchLabels:
+      app: grafana
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - port: 3000
+          protocol: TCP

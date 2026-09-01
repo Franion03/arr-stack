@@ -1,0 +1,53 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+
+  "_comment": [
+    "Every image here is pinned by digest, which Dependabot cannot bump for",
+    "Kubernetes manifests -- it only reads Dockerfiles and docker-compose.",
+    "Renovate is what moves those pins.",
+    "Requires the Renovate GitHub App to be installed on this repository."
+  ],
+
+  "timezone": "Europe/Madrid",
+  "schedule": ["before 6am on monday"],
+  "prConcurrentLimit": 5,
+  "commitMessagePrefix": "chore(images):",
+
+  "kubernetes": {
+    "managerFilePatterns": ["/apps/.+\\.yaml$/"]
+  },
+
+  "packageRules": [
+    {
+      "description": "The media stack moves together and breaks together; one PR for all of it keeps the *arr apps in step.",
+      "matchPackageNames": [
+        "lscr.io/linuxserver/**",
+        "fallenbagel/jellyseerr",
+        "ghcr.io/ajnart/homarr",
+        "ghcr.io/dispatcharr/dispatcharr"
+      ],
+      "groupName": "media stack"
+    },
+    {
+      "description": "The assistant is the one stack whose breakage is noticed immediately, so its images get individual PRs that can be reverted individually.",
+      "matchPackageNames": [
+        "ghcr.io/franion03/home-harness",
+        "ghcr.io/open-webui/open-webui",
+        "ghcr.io/matatonic/openedai-speech-min"
+      ],
+      "groupName": null
+    },
+    {
+      "description": "open-webui tracks a development branch, so a bump is a real change rather than a patch. Never group it, and never automerge it.",
+      "matchPackageNames": ["ghcr.io/open-webui/open-webui"],
+      "automerge": false,
+      "prPriority": -1
+    },
+    {
+      "description": "cloudflared and busybox are infrastructure: a stale tunnel client eventually stops connecting, so let these through on their own.",
+      "matchPackageNames": ["cloudflare/cloudflared", "busybox"],
+      "groupName": "infrastructure images"
+    }
+  ]
+}

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: transmission
-          image: lscr.io/linuxserver/transmission:latest
+          image: lscr.io/linuxserver/transmission:latest@sha256:473a313dfcc0f307f2bd122009784d2523e0d8ab1051713cb56dfdd4bcce86cc
           ports:
             - containerPort: 9091
           env:

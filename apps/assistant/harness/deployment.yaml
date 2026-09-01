@@ -20,8 +20,12 @@ spec:
         runAsUser: 10001
       containers:
         - name: harness
-          image: ghcr.io/franion03/home-harness:latest
-          imagePullPolicy: Always
+          # Pinned by digest: a mutable tag gives no rollback target and no
+          # drift detection -- ArgoCD reports Synced while the running image
+          # differs. Renovate moves this pin; the build workflow in
+          # Franion03/home-harness prints the new digest to its job summary.
+          image: ghcr.io/franion03/home-harness:latest@sha256:a3d1b3104c4d8918dd8b262b0440365484c92d4e0a4ae32f4ea61ee986ae64ca
+          imagePullPolicy: IfNotPresent
           ports:
             - name: http
               containerPort: 8080
