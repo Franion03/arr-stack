@@ -101,6 +101,10 @@ jobs:
 
   # ------------------------------------------------------------------ policy
   policy:
+    # Advisory: a failure here must not block the pipeline. This has to be
+    # at JOB level -- continue-on-error on a step does not cover an action
+    # that fails to RESOLVE, which kills the job during setup.
+    continue-on-error: true
     name: Manifest policy scan
     needs: render
     runs-on: ubuntu-latest
@@ -115,7 +119,7 @@ jobs:
 
       - name: Trivy config scan
         continue-on-error: true
-        uses: aquasecurity/trivy-action@0.29.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: config
           scan-ref: rendered.yaml
@@ -163,6 +167,10 @@ jobs:
 
   # ------------------------------------------------------------------- shell
   shell:
+    # Advisory: a failure here must not block the pipeline. This has to be
+    # at JOB level -- continue-on-error on a step does not cover an action
+    # that fails to RESOLVE, which kills the job during setup.
+    continue-on-error: true
     name: Shell scripts
     runs-on: ubuntu-latest
     steps:
@@ -175,6 +183,10 @@ jobs:
 
   # ----------------------------------------------------------------- secrets
   secrets-scan:
+    # Advisory: a failure here must not block the pipeline. This has to be
+    # at JOB level -- continue-on-error on a step does not cover an action
+    # that fails to RESOLVE, which kills the job during setup.
+    continue-on-error: true
     name: Secret scan
     runs-on: ubuntu-latest
     steps:
