@@ -1,0 +1,25 @@
+version: 2
+
+# Container images in this repo are updated by hand, so nothing here notices
+# an upstream CVE on its own. These PRs are the notice.
+#
+# Note: Dependabot only bumps images pinned to a version tag. The images
+# currently on `:latest` / `:main` are invisible to it — see the digest
+# pinning item in the phase C plan.
+
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: 'chore(ci)'
+
+  - package-ecosystem: terraform
+    directory: /terraform
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: 'chore(terraform)'

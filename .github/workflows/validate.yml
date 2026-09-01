@@ -1,0 +1,180 @@
+name: Validate
+
+# ArgoCD applies this repo to the running house with prune + selfHeal, so a
+# manifest that does not render, or renders into something the API server
+# rejects, degrades the cluster with no review step in between. This workflow
+# is that review step.
+#
+# Enforced today:   kustomize renders, kubeconform schema validation,
+#                   terraform fmt/validate, YAML parses.
+# Advisory for now: policy scanning, tflint, shellcheck, secret scanning.
+#                   Drop `continue-on-error` on each once its backlog is clear.
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ------------------------------------------------------------------ render
+  render:
+    name: Render and schema-check manifests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install kustomize and kubeconform
+        run: |
+          curl -sSL "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          sudo mv kustomize /usr/local/bin/
+          curl -sSL "https://github.com/yannh/kubeconform/releases/download/v0.6.7/kubeconform-linux-amd64.tar.gz" \
+            | tar -xz -C /tmp kubeconform
+          sudo mv /tmp/kubeconform /usr/local/bin/
+
+      # Per app first, so a failure names the app instead of failing the whole
+      # tree with one opaque error.
+      - name: Render each app
+        run: |
+          failed=""
+          for d in apps/*/; do
+            [ -f "$d/kustomization.yaml" ] || continue
+            name=$(basename "$d")
+            if kustomize build "$d" > /dev/null 2>/tmp/err.txt; then
+              echo "  ok    $name"
+            else
+              echo "  FAIL  $name"
+              sed 's/^/          /' /tmp/err.txt
+              failed="$failed $name"
+            fi
+          done
+          if [ -n "$failed" ]; then
+            echo "::error::kustomize build failed for:$failed"
+            exit 1
+          fi
+
+      - name: Render the full tree
+        run: kustomize build apps/ > rendered.yaml
+
+      # -ignore-missing-schemas so a CRD with no published schema is skipped
+      # rather than failing; the CRDs-catalog covers cert-manager, ArgoCD and
+      # SealedSecrets, which is most of what this repo uses.
+      - name: kubeconform
+        run: |
+          kubeconform \
+            -strict \
+            -summary \
+            -ignore-missing-schemas \
+            -kubernetes-version 1.31.0 \
+            -schema-location default \
+            -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' \
+            rendered.yaml
+
+      - name: Warn on mutable image tags
+        continue-on-error: true
+        run: |
+          # A mutable tag means no rollback and no drift detection: ArgoCD
+          # reports Synced while the running image differs from the manifest.
+          if grep -nE 'image: .*:(latest|main|master|stable)$' rendered.yaml; then
+            echo "::warning::images above are pinned to a mutable tag; pin by digest"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rendered-manifests
+          path: rendered.yaml
+
+  # ------------------------------------------------------------------ policy
+  policy:
+    name: Manifest policy scan
+    needs: render
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: rendered-manifests
+
+      - name: Trivy config scan
+        continue-on-error: true
+        uses: aquasecurity/trivy-action@0.29.0
+        with:
+          scan-type: config
+          scan-ref: rendered.yaml
+          format: sarif
+          output: trivy-k8s.sarif
+          severity: HIGH,CRITICAL
+
+      - name: Upload to the Security tab
+        if: always() && hashFiles('trivy-k8s.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-k8s.sarif
+          category: trivy-manifests
+
+  # --------------------------------------------------------------- terraform
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: fmt
+        run: terraform fmt -check -recursive -diff
+
+      # -backend=false: this never touches state, it only resolves providers
+      # so that validate can run.
+      - name: init
+        run: terraform init -backend=false -input=false
+
+      - name: validate
+        run: terraform validate
+
+      - name: tflint
+        continue-on-error: true
+        run: |
+          curl -sSL https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+          tflint --init
+          tflint --format compact
+
+  # ------------------------------------------------------------------- shell
+  shell:
+    name: Shell scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: shellcheck
+        continue-on-error: true
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck --severity=warning scripts/*.sh
+
+  # ----------------------------------------------------------------- secrets
+  secrets-scan:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # history, not just the tip
+      - name: gitleaks
+        continue-on-error: true
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
