@@ -64,14 +64,22 @@ jobs:
         run: kustomize build apps/ > rendered.yaml
 
       # -ignore-missing-schemas so a CRD with no published schema is skipped
-      # rather than failing; the CRDs-catalog covers cert-manager, ArgoCD and
-      # SealedSecrets, which is most of what this repo uses.
+      # rather than failing; the CRDs-catalog covers cert-manager and ArgoCD,
+      # which is most of what this repo uses.
+      #
+      # -skip SealedSecret: kubeseal itself writes `creationTimestamp: null`
+      # into spec.template.metadata, and the catalog's sealedsecret schema
+      # declares that object additionalProperties:false, so every sealed
+      # secret this repo has ever produced fails validation. The real CRD
+      # accepts it -- all four are live in the cluster. The schema is wrong,
+      # not the manifests.
       - name: kubeconform
         run: |
           kubeconform \
             -strict \
             -summary \
             -ignore-missing-schemas \
+            -skip SealedSecret \
             -kubernetes-version 1.31.0 \
             -schema-location default \
             -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' \
