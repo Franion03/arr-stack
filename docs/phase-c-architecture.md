@@ -192,3 +192,48 @@ ArgoCD app not Synced, pod restart rate, and certificate expiry under 14 days.
 - **Terraform state backend.** `terraform/` is two files driving a
   `null_resource` over SSH. Remote state would add a dependency without
   solving a problem you have.
+
+---
+
+## Incident 2026-09-01 — cloudflared tunnel down after the C2 rollout
+
+**What broke.** The media tunnel is down. `cloudflared` crashloops with
+`Provided Tunnel token is not valid.`, and `jellyfin.calzadoskiruz.com`
+returns 530.
+
+**Root cause, which predates this work.** `apps/cloudflared/sealed-secret.yaml`
+has contained `PLACEHOLDER_...` (35 chars) since `3c7c725`, the original
+secrets-pipeline commit — it has never been changed since. ArgoCD applied that
+placeholder Secret to the cluster, but the running pod had started
+2026-05-10 and a container reads its environment **once, at start**. So the
+pod kept serving with the real token for 114 days while the Secret behind it
+was worthless.
+
+**What triggered it.** Pinning images by digest (C2) changed the pod template,
+which is exactly the "unrelated restart" that section warned about. The
+Deployment rolled, the 114-day-old pod was replaced, and the new one read the
+placeholder. The working token existed only in that container's environment
+and went away with it.
+
+**Recovery — needs the Cloudflare dashboard.** The value is not in
+`secrets/.env`, not in git, and not recoverable from the cluster:
+
+1. Cloudflare Zero Trust → Networks → Tunnels → the tunnel → Configure, and
+   copy the token (or rotate it).
+2. GitHub → `Franion03/arr-stack` → Settings → Secrets and variables →
+   Actions → set `CLOUDFLARE_TUNNEL_TOKEN`.
+3. Actions → Seal Secrets → **Run workflow** (the cloudflared step is
+   `workflow_dispatch`-only by design).
+4. ArgoCD applies it, then `kubectl rollout restart deploy/cloudflared -n media`.
+
+**Prevention, now in the seal workflow.** The cloudflared step refuses to seal
+a value containing `PLACEHOLDER`/`changeme` or shorter than 60 characters, and
+the harness loop's tripwire catches placeholder-shaped values as well as short
+ones.
+
+**The general lesson.** A Secret being wrong is invisible for as long as the
+pod does not restart, and `kubectl get secret` shows a healthy-looking object
+either way. An audit of every Secret in the cluster found this was the only
+placeholder — the other empty keys are unconfigured optional vendors
+(Groq, Deepgram, ElevenLabs, OpenAI, CF Workers AI) and
+`GOOGLE_CALENDAR_ID="primary"`.
