@@ -1,0 +1,21 @@
+# Not how anyone actually connects -- players reach the pod on its tailnet
+# address, which bypasses Service routing entirely. This exists so the game
+# and RCON ports have a stable in-cluster name for debugging, and so a future
+# LAN-play setup has something to point a NodePort at.
+apiVersion: v1
+kind: Service
+metadata:
+  name: palworld
+  namespace: palworld
+spec:
+  selector:
+    app: palworld
+  ports:
+    - name: game
+      port: 8211
+      targetPort: game
+      protocol: UDP
+    - name: rcon
+      port: 25575
+      targetPort: rcon
+      protocol: TCP

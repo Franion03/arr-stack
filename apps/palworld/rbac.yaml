@@ -1,0 +1,76 @@
+# Two identities, deliberately separate.
+#
+#   palworld          the pod. Its only privilege is writing the Tailscale
+#                     node state into a Secret (TS_KUBE_SECRET), so the node
+#                     keeps its identity across restarts instead of joining
+#                     the tailnet as a new machine every time and leaving a
+#                     trail of dead "palworld-1, palworld-2" entries.
+#   palworld-restart  the nightly CronJob. It can restart this one Deployment
+#                     and nothing else.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: palworld
+  namespace: palworld
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: palworld-tailscale-state
+  namespace: palworld
+rules:
+  # tailscaled creates the state Secret on first login; it cannot be
+  # restricted by resourceName because it does not exist yet.
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["create"]
+  # Afterwards it only ever touches its own.
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["tailscale-palworld-state"]
+    verbs: ["get", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: palworld-tailscale-state
+  namespace: palworld
+subjects:
+  - kind: ServiceAccount
+    name: palworld
+    namespace: palworld
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: palworld-tailscale-state
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: palworld-restart
+  namespace: palworld
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: palworld-restart
+  namespace: palworld
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    resourceNames: ["palworld"]
+    verbs: ["get", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: palworld-restart
+  namespace: palworld
+subjects:
+  - kind: ServiceAccount
+    name: palworld-restart
+    namespace: palworld
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: palworld-restart

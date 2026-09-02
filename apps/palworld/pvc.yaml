@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: palworld-data
+  namespace: palworld
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      # Server binaries are ~10 GB and the image keeps rolling backups of the
+      # save alongside them. local-path cannot expand, so this is deliberately
+      # generous -- resizing later means recreating the volume and re-downloading
+      # the whole server.
+      storage: 40Gi

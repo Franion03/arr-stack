@@ -1,0 +1,30 @@
+# Palworld dedicated server, reachable only over the tailnet.
+#
+# Why a Tailscale sidecar and not the Tailscale Kubernetes operator:
+# the operator's `loadBalancerClass: tailscale` proxies TCP only. Palworld's
+# game port is 8211/UDP, so a Tailscale Service cannot carry it. A sidecar in
+# kernel mode puts the pod itself on the tailnet, and the game server binds
+# the tailnet address directly -- no proxy, no protocol limitation.
+#
+# This also means there is NO host port, NO `k3d cluster edit --port-add`,
+# and nothing listening on the LAN or the router. The only way in is the
+# tailnet.
+#
+#   friend's machine --(WireGuard)--> palworld pod :8211/udp
+#
+# arr-stack-root's destination namespace is `media`, so `palworld` is pinned
+# here and on every resource.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: palworld
+
+resources:
+  - namespace.yaml
+  - sealed-secret.yaml
+  - rbac.yaml
+  - pvc.yaml
+  - deployment.yaml
+  - service.yaml
+  - network-policy.yaml
+  - restart-cronjob.yaml

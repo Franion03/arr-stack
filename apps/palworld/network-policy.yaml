@@ -1,0 +1,31 @@
+# Nothing in the cluster has any business talking to a game server, and the
+# players do not arrive through the cluster network at all -- their packets
+# come out of the WireGuard tunnel inside the pod's own netns, downstream of
+# anything kube-router enforces on eth0.
+#
+# What this policy therefore protects against is the media stack or a
+# compromised *arr container reaching RCON on 25575, which is remote command
+# execution on the save.
+#
+# Egress is deliberately absent. tailscaled must reach the coordination server
+# and DERP relays, and a wrong egress rule here fails as "friend cannot
+# connect" with no obvious cause.
+#
+# NOTE: NetworkPolicy in k3s (kube-router) is stateful, so tailscale's NAT
+# traversal still establishes DIRECT peer connections -- the outbound probe
+# creates the conntrack entry the reply rides back on. Verify after deploying:
+#
+#   kubectl -n palworld exec deploy/palworld -c tailscale -- tailscale status
+#
+# A peer shown as "relay \"fra\"" instead of "direct" means traffic is going
+# the long way round through DERP and latency will suffer; drop this policy
+# and re-test if that happens.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: palworld
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress

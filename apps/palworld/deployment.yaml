@@ -1,0 +1,154 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: palworld
+  namespace: palworld
+  labels:
+    app: palworld
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: palworld
+  strategy:
+    type: Recreate          # single RWO volume, and two servers on one save
+                            # would corrupt it
+  template:
+    metadata:
+      labels:
+        app: palworld
+    spec:
+      serviceAccountName: palworld
+      securityContext:
+        fsGroup: 1000
+      containers:
+        # ------------------------------------------------------------ tailnet
+        # Kernel mode (TS_USERSPACE=false) is not optional here. Userspace
+        # mode proxies TCP only; Palworld is UDP, so userspace would come up
+        # cleanly, show as connected, and simply never pass a game packet.
+        - name: tailscale
+          image: tailscale/tailscale:v1.102.3
+          env:
+            - name: TS_AUTHKEY
+              valueFrom:
+                secretKeyRef: { name: palworld-secrets, key: TS_AUTHKEY }
+            # Node identity survives restarts -- see rbac.yaml.
+            - name: TS_KUBE_SECRET
+              value: "tailscale-palworld-state"
+            - name: TS_HOSTNAME
+              value: "palworld"
+            - name: TS_USERSPACE
+              value: "false"
+            # Only needed when authenticating with an OAuth client rather than
+            # a pre-tagged auth key, where --advertise-tags is mandatory.
+            # Optional so a plain auth key works with no extra config.
+            - name: TS_EXTRA_ARGS
+              valueFrom:
+                secretKeyRef:
+                  name: palworld-secrets
+                  key: TS_EXTRA_ARGS
+                  optional: true
+          securityContext:
+            capabilities:
+              add: ["NET_ADMIN"]
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: dev-net-tun
+              mountPath: /dev/net/tun
+
+        # ----------------------------------------------------------- the game
+        - name: palworld
+          image: thijsvanloef/palworld-server-docker:v2.7.3
+          ports:
+            - name: game
+              containerPort: 8211
+              protocol: UDP
+            - name: rcon
+              containerPort: 25575
+              protocol: TCP
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Europe/Zurich"
+            - name: PORT
+              value: "8211"
+            # Two players, a little headroom. Lower is not just cosmetic:
+            # the server pre-allocates per-slot state.
+            - name: PLAYERS
+              value: "4"
+            - name: MULTITHREADING
+              value: "true"
+            # Tailnet-only, so it could never appear in the community browser
+            # anyway. Off means the Steam query port is not needed at all.
+            - name: COMMUNITY
+              value: "false"
+            - name: SERVER_NAME
+              value: "Casa"
+            - name: UPDATE_ON_BOOT
+              value: "true"
+            # The nightly restart is a CronJob (restart-cronjob.yaml), not this.
+            # The image's own reboot kills the process inside a container that
+            # Kubernetes is already watching, which turns one restart into a
+            # CrashLoopBackOff race.
+            - name: AUTO_REBOOT_ENABLED
+              value: "false"
+            - name: BACKUP_ENABLED
+              value: "true"
+            - name: BACKUP_CRON_EXPRESSION
+              value: "0 4 * * *"
+            - name: DELETE_OLD_BACKUPS
+              value: "true"
+            - name: OLD_BACKUP_DAYS
+              value: "14"
+            - name: RCON_ENABLED
+              value: "true"
+            - name: RCON_PORT
+              value: "25575"
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: palworld-secrets, key: ADMIN_PASSWORD }
+            - name: SERVER_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: palworld-secrets, key: SERVER_PASSWORD }
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "4Gi"
+            limits:
+              cpu: "4"
+              # Palworld leaks memory steadily regardless of player count. This
+              # limit is the backstop: an OOMKill restarts the pod and reclaims
+              # it. The nightly CronJob is what should normally get there first.
+              # 12Gi leaves ~12Gi free on a 32Gi node alongside the media and
+              # assistant stacks.
+              memory: "12Gi"
+          volumeMounts:
+            - name: data
+              mountPath: /palworld
+          # First boot downloads ~10 GB through SteamCMD before anything
+          # listens. 120 x 15s = 30 minutes before Kubernetes gives up.
+          startupProbe:
+            tcpSocket: { port: rcon }
+            periodSeconds: 15
+            failureThreshold: 120
+          livenessProbe:
+            tcpSocket: { port: rcon }
+            periodSeconds: 30
+            failureThreshold: 10
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: palworld-data
+        - name: dev-net-tun
+          hostPath:
+            path: /dev/net/tun
+            type: CharDevice

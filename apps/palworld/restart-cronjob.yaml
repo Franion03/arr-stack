@@ -1,0 +1,41 @@
+# Palworld's dedicated server leaks memory until it dies. This is documented,
+# unfixed, and happens on a two-player server exactly as it does on a thirty-
+# player one -- only slower. The accepted fix everywhere is a scheduled
+# restart, so this is that.
+#
+# 05:00 Europe/Zurich: after the 04:00 backup, and at an hour nobody is
+# playing. `rollout restart` rather than deleting the pod, so the Recreate
+# strategy is respected and the RWO volume is released cleanly.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: palworld-restart
+  namespace: palworld
+spec:
+  schedule: "0 5 * * *"
+  timeZone: "Europe/Zurich"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          serviceAccountName: palworld-restart
+          restartPolicy: OnFailure
+          containers:
+            - name: kubectl
+              image: rancher/kubectl:v1.31.14
+              args:
+                - rollout
+                - restart
+                - deployment/palworld
+                - --namespace=palworld
+              resources:
+                requests:
+                  cpu: "10m"
+                  memory: "32Mi"
+                limits:
+                  cpu: "200m"
+                  memory: "128Mi"
