@@ -111,6 +111,8 @@ spec:
               value: "14"
             - name: RCON_ENABLED
               value: "true"
+            - name: DIFFICULTY
+              value: "Difficult"
             - name: RCON_PORT
               value: "25575"
             - name: ADMIN_PASSWORD
