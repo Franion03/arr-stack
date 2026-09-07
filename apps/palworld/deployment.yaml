@@ -64,7 +64,7 @@ spec:
 
         # ----------------------------------------------------------- the game
         - name: palworld
-          image: thijsvanloef/palworld-server-docker:v2.7.3
+          image: thijsvanloef/palworld-server-docker:latest
           ports:
             - name: game
               containerPort: 8211
