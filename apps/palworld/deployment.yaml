@@ -63,8 +63,13 @@ spec:
               mountPath: /dev/net/tun
 
         # ----------------------------------------------------------- the game
+        # The image tag is pinned, like every image in this repo. The Palworld
+        # game build itself is NOT this tag -- it comes from SteamCMD via
+        # UPDATE_ON_BOOT below, so a game update (e.g. v1.0.4) is applied by
+        # rolling a new pod, not by moving this tag. `latest` would silently
+        # move the image out from under git and hide it from Renovate.
         - name: palworld
-          image: thijsvanloef/palworld-server-docker:latest
+          image: thijsvanloef/palworld-server-docker:v2.7.3
           ports:
             - name: game
               containerPort: 8211
