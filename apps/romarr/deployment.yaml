@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: romarr
+  namespace: media
+  labels:
+    app: romarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: romarr
+  template:
+    metadata:
+      labels:
+        app: romarr
+    spec:
+      containers:
+        - name: romarr
+          image: ghcr.io/romarr-app/romarr:latest
+          ports:
+            - containerPort: 6868
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Etc/UTC"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: media
+              mountPath: /data
+      volumes:
+        - name: config
+          emptyDir: {}
+        - name: media
+          persistentVolumeClaim:
+            claimName: media-pvc
