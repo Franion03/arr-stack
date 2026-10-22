@@ -10,7 +10,7 @@ resources:
   - radarr/
   - transmission/
   - jellyfin/
-  - jellyseerr/
+  - seerr/
   - homarr/
   - kubernetes-dashboard/
   - dispatcharr/
@@ -20,3 +20,4 @@ resources:
   - palworld/
   - gamarr/
   - romarr/
+  - romm/

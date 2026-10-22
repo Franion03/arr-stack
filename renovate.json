@@ -23,9 +23,10 @@
       "description": "The media stack moves together and breaks together; one PR for all of it keeps the *arr apps in step.",
       "matchPackageNames": [
         "lscr.io/linuxserver/**",
-        "fallenbagel/jellyseerr",
+        "ghcr.io/seerr-team/seerr",
         "ghcr.io/ajnart/homarr",
-        "ghcr.io/dispatcharr/dispatcharr"
+        "ghcr.io/dispatcharr/dispatcharr",
+        "ghcr.io/rommapp/romm"
       ],
       "groupName": "media stack"
     },

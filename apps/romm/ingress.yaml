@@ -1,20 +1,20 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: jellyseerr
+  name: romm
   namespace: media
   annotations:
     ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
   rules:
-    - host: jellyseerr.192.168.1.114.nip.io
+    - host: romm.192.168.1.114.nip.io
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: jellyseerr
+                name: romm
                 port:
                   number: 80

@@ -101,11 +101,11 @@ data:
         },
         {
           "id": "a490a8d5-5dd8-50e5-b147-32a2d1d2e791",
-          "name": "Jellyseerr",
-          "url": "http://jellyseerr.192.168.1.114.nip.io",
+          "name": "Seerr",
+          "url": "http://seerr.192.168.1.114.nip.io",
           "behaviour": {
-            "onClickUrl": "http://jellyseerr.192.168.1.114.nip.io",
-            "externalUrl": "http://jellyseerr.192.168.1.114.nip.io",
+            "onClickUrl": "http://seerr.192.168.1.114.nip.io",
+            "externalUrl": "http://seerr.192.168.1.114.nip.io",
             "isOpeningNewTab": true,
             "tooltipDescription": ""
           },
@@ -116,7 +116,7 @@ data:
             ]
           },
           "appearance": {
-            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/jellyseerr.png",
+            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/seerr.png",
             "appNameStatus": "normal",
             "positionAppName": "column",
             "lineClampAppName": 2
