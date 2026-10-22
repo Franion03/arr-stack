@@ -24,7 +24,7 @@ spec:
           # 2.x, not 3.x: Home Assistant's InfluxDB integration speaks 1.x and
           # 2.x. Moving to 3 would mean rewriting the HA side for no gain at
           # this data volume.
-          image: influxdb:2.7-alpine
+          image: influxdb:2.9-alpine
           ports:
             - name: http
               containerPort: 8086

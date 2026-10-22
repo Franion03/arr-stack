@@ -24,7 +24,7 @@ spec:
           # drift detection -- ArgoCD reports Synced while the running image
           # differs. Renovate moves this pin; the build workflow in
           # Franion03/home-harness prints the new digest to its job summary.
-          image: ghcr.io/franion03/home-harness:latest@sha256:a3d1b3104c4d8918dd8b262b0440365484c92d4e0a4ae32f4ea61ee986ae64ca
+          image: ghcr.io/franion03/home-harness:latest@sha256:722fc740e4fe326216bf44108c7fea9d4bb75425e38ae290629a71fbe02a6092
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

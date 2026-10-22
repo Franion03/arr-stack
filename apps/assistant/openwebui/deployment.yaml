@@ -24,7 +24,7 @@ spec:
         - name: openwebui
           # Pinned by digest. `main` is a development branch, so this is the
           # one that most needed it -- see harness/deployment.yaml.
-          image: ghcr.io/open-webui/open-webui:main@sha256:8afd2d774834c618a75411b3491cdc5da7396dc464f56a160b937ff2992eb6e4
+          image: ghcr.io/open-webui/open-webui:main@sha256:4860ba005ae8f19f08d1e12b0868855b7b339ea0dad9927f196820fc0de04575
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: romarr
-          image: ghcr.io/romarr-app/romarr:latest
+          image: ghcr.io/blizzhacker/romarr:latest
           ports:
             - containerPort: 6868
           env:

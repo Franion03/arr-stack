@@ -21,7 +21,7 @@ spec:
         fsGroup: 472          # the uid grafana runs as
       containers:
         - name: grafana
-          image: grafana/grafana:11.3.0
+          image: grafana/grafana:13.2.4
           ports:
             - name: http
               containerPort: 3000

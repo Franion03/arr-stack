@@ -21,7 +21,7 @@ spec:
           - 992   # render group - access to /dev/dri/renderD128
       initContainers:
         - name: enable-hw-accel
-          image: busybox:latest@sha256:32015ee641bfecc97161986c9d24957068175444f66fbcbe08a664b6cf5c1c2e
+          image: busybox:latest@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
           command:
             - sh
             - -c
@@ -39,7 +39,7 @@ spec:
               mountPath: /config
       containers:
         - name: jellyfin
-          image: lscr.io/linuxserver/jellyfin:latest@sha256:155fb51c745d1a2c28c8b300612bc728a5dd06097bbc62b8b1c76d174eb20366
+          image: lscr.io/linuxserver/jellyfin:latest@sha256:38f6ad3bcd487c82933ede7e32d74ab8712fffcff9e87b16dd2e245ab37130f8
           securityContext:
             privileged: true
           ports:

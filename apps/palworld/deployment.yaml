@@ -27,7 +27,7 @@ spec:
         # mode proxies TCP only; Palworld is UDP, so userspace would come up
         # cleanly, show as connected, and simply never pass a game packet.
         - name: tailscale
-          image: tailscale/tailscale:v1.102.3
+          image: tailscale/tailscale:v1.104.2
           env:
             - name: TS_AUTHKEY
               valueFrom:
@@ -69,7 +69,7 @@ spec:
         # rolling a new pod, not by moving this tag. `latest` would silently
         # move the image out from under git and hide it from Renovate.
         - name: palworld
-          image: thijsvanloef/palworld-server-docker:v2.7.3
+          image: thijsvanloef/palworld-server-docker:2.8.0
           ports:
             - name: game
               containerPort: 8211
