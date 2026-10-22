@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: romm-db
+  namespace: media
+spec:
+  selector:
+    app: romm-db
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306

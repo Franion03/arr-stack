@@ -17,6 +17,13 @@ spec:
     spec:
       securityContext:
         fsGroup: 1000
+      initContainers:
+        - name: wait-for-db
+          image: busybox:latest@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
+          command:
+            - sh
+            - -c
+            - "until nc -z romm-db 3306; do echo waiting-for-mariadb; sleep 2; done"
       containers:
         - name: romm
           image: ghcr.io/rommapp/romm:latest@sha256:8677fb7b81b1d3db20b849e989a1dadc2a11159e51eb34a2acdcb01102274edf
@@ -30,6 +37,19 @@ spec:
                 secretKeyRef:
                   name: romm-secrets
                   key: ROMM_AUTH_SECRET_KEY
+            - name: DB_HOST
+              value: "romm-db"
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              value: "romm"
+            - name: DB_USER
+              value: "romm-user"
+            - name: DB_PASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secrets
+                  key: MARIADB_PASSWORD
           volumeMounts:
             - name: resources
               mountPath: /romm/resources
