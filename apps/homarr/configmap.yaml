@@ -1,0 +1,948 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homarr-board
+  namespace: media
+data:
+  default.json: |
+    {
+      "schemaVersion": 2,
+      "configProperties": {
+        "name": "default"
+      },
+      "categories": [
+        {
+          "id": "ff9b55cf-8cab-5bf4-9067-e64365eb6f6c",
+          "name": "Media",
+          "position": 0
+        },
+        {
+          "id": "1eadfe34-d9ea-5d81-be97-eb5e81e1955d",
+          "name": "Dashboards",
+          "position": 1
+        },
+        {
+          "id": "d29e0f99-9faa-5179-b6f8-74ee651012b8",
+          "name": "AI",
+          "position": 2
+        }
+      ],
+      "wrappers": [
+        {
+          "id": "default",
+          "position": 0
+        }
+      ],
+      "apps": [
+        {
+          "id": "9b58d0dd-2cbf-51f9-9c42-e1347e21504a",
+          "name": "Jellyfin",
+          "url": "http://jellyfin.192.168.1.114.nip.io",
+          "behaviour": {
+            "onClickUrl": "http://jellyfin.192.168.1.114.nip.io",
+            "externalUrl": "http://jellyfin.192.168.1.114.nip.io",
+            "isOpeningNewTab": true,
+            "tooltipDescription": ""
+          },
+          "network": {
+            "enabledStatusChecker": false,
+            "statusCodes": [
+              "200"
+            ]
+          },
+          "appearance": {
+            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/jellyfin.png",
+            "appNameStatus": "normal",
+            "positionAppName": "column",
+            "lineClampAppName": 2
+          },
+          "integration": {
+            "type": null,
+            "properties": []
+          },
+          "area": {
+            "type": "category",
+            "properties": {
+              "id": "ff9b55cf-8cab-5bf4-9067-e64365eb6f6c"
+            }
+          },
+          "shape": {
+            "md": {
+              "location": {
+                "x": 0,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "sm": {
+              "location": {
+                "x": 0,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "lg": {
+              "location": {
+                "x": 0,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            }
+          }
+        },
+        {
+          "id": "a490a8d5-5dd8-50e5-b147-32a2d1d2e791",
+          "name": "Jellyseerr",
+          "url": "http://jellyseerr.192.168.1.114.nip.io",
+          "behaviour": {
+            "onClickUrl": "http://jellyseerr.192.168.1.114.nip.io",
+            "externalUrl": "http://jellyseerr.192.168.1.114.nip.io",
+            "isOpeningNewTab": true,
+            "tooltipDescription": ""
+          },
+          "network": {
+            "enabledStatusChecker": false,
+            "statusCodes": [
+              "200"
+            ]
+          },
+          "appearance": {
+            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/jellyseerr.png",
+            "appNameStatus": "normal",
+            "positionAppName": "column",
+            "lineClampAppName": 2
+          },
+          "integration": {
+            "type": null,
+            "properties": []
+          },
+          "area": {
+            "type": "category",
+            "properties": {
+              "id": "ff9b55cf-8cab-5bf4-9067-e64365eb6f6c"
+            }
+          },
+          "shape": {
+            "md": {
+              "location": {
+                "x": 2,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "sm": {
+              "location": {
+                "x": 2,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "lg": {
+              "location": {
+                "x": 2,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            }
+          }
+        },
+        {
+          "id": "50b48f45-3aa5-50c8-a521-b39f1a8ee205",
+          "name": "Sonarr",
+          "url": "http://sonarr.192.168.1.114.nip.io",
+          "behaviour": {
+            "onClickUrl": "http://sonarr.192.168.1.114.nip.io",
+            "externalUrl": "http://sonarr.192.168.1.114.nip.io",
+            "isOpeningNewTab": true,
+            "tooltipDescription": ""
+          },
+          "network": {
+            "enabledStatusChecker": false,
+            "statusCodes": [
+              "200"
+            ]
+          },
+          "appearance": {
+            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/sonarr.png",
+            "appNameStatus": "normal",
+            "positionAppName": "column",
+            "lineClampAppName": 2
+          },
+          "integration": {
+            "type": null,
+            "properties": []
+          },
+          "area": {
+            "type": "category",
+            "properties": {
+              "id": "ff9b55cf-8cab-5bf4-9067-e64365eb6f6c"
+            }
+          },
+          "shape": {
+            "md": {
+              "location": {
+                "x": 4,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "sm": {
+              "location": {
+                "x": 4,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "lg": {
+              "location": {
+                "x": 4,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            }
+          }
+        },
+        {
+          "id": "19b48baf-f248-58f0-b816-dd0b351c0e26",
+          "name": "Radarr",
+          "url": "http://radarr.192.168.1.114.nip.io",
+          "behaviour": {
+            "onClickUrl": "http://radarr.192.168.1.114.nip.io",
+            "externalUrl": "http://radarr.192.168.1.114.nip.io",
+            "isOpeningNewTab": true,
+            "tooltipDescription": ""
+          },
+          "network": {
+            "enabledStatusChecker": false,
+            "statusCodes": [
+              "200"
+            ]
+          },
+          "appearance": {
+            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/radarr.png",
+            "appNameStatus": "normal",
+            "positionAppName": "column",
+            "lineClampAppName": 2
+          },
+          "integration": {
+            "type": null,
+            "properties": []
+          },
+          "area": {
+            "type": "category",
+            "properties": {
+              "id": "ff9b55cf-8cab-5bf4-9067-e64365eb6f6c"
+            }
+          },
+          "shape": {
+            "md": {
+              "location": {
+                "x": 6,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "sm": {
+              "location": {
+                "x": 6,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "lg": {
+              "location": {
+                "x": 6,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            }
+          }
+        },
+        {
+          "id": "9a08b6dd-f4f0-5c1c-a931-ad9f7d1220a7",
+          "name": "Prowlarr",
+          "url": "http://prowlarr.192.168.1.114.nip.io",
+          "behaviour": {
+            "onClickUrl": "http://prowlarr.192.168.1.114.nip.io",
+            "externalUrl": "http://prowlarr.192.168.1.114.nip.io",
+            "isOpeningNewTab": true,
+            "tooltipDescription": ""
+          },
+          "network": {
+            "enabledStatusChecker": false,
+            "statusCodes": [
+              "200"
+            ]
+          },
+          "appearance": {
+            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/prowlarr.png",
+            "appNameStatus": "normal",
+            "positionAppName": "column",
+            "lineClampAppName": 2
+          },
+          "integration": {
+            "type": null,
+            "properties": []
+          },
+          "area": {
+            "type": "category",
+            "properties": {
+              "id": "ff9b55cf-8cab-5bf4-9067-e64365eb6f6c"
+            }
+          },
+          "shape": {
+            "md": {
+              "location": {
+                "x": 8,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "sm": {
+              "location": {
+                "x": 8,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "lg": {
+              "location": {
+                "x": 8,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            }
+          }
+        },
+        {
+          "id": "067af968-6ce2-57df-95b7-dd8ebc99123d",
+          "name": "Transmission",
+          "url": "http://transmission.192.168.1.114.nip.io",
+          "behaviour": {
+            "onClickUrl": "http://transmission.192.168.1.114.nip.io",
+            "externalUrl": "http://transmission.192.168.1.114.nip.io",
+            "isOpeningNewTab": true,
+            "tooltipDescription": ""
+          },
+          "network": {
+            "enabledStatusChecker": false,
+            "statusCodes": [
+              "200"
+            ]
+          },
+          "appearance": {
+            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/transmission.png",
+            "appNameStatus": "normal",
+            "positionAppName": "column",
+            "lineClampAppName": 2
+          },
+          "integration": {
+            "type": null,
+            "properties": []
+          },
+          "area": {
+            "type": "category",
+            "properties": {
+              "id": "ff9b55cf-8cab-5bf4-9067-e64365eb6f6c"
+            }
+          },
+          "shape": {
+            "md": {
+              "location": {
+                "x": 10,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "sm": {
+              "location": {
+                "x": 10,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "lg": {
+              "location": {
+                "x": 10,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            }
+          }
+        },
+        {
+          "id": "d59e6e94-031f-5c3e-b3a2-f51ae78c402f",
+          "name": "Dispatcharr",
+          "url": "http://dispatcharr.192.168.1.114.nip.io",
+          "behaviour": {
+            "onClickUrl": "http://dispatcharr.192.168.1.114.nip.io",
+            "externalUrl": "http://dispatcharr.192.168.1.114.nip.io",
+            "isOpeningNewTab": true,
+            "tooltipDescription": ""
+          },
+          "network": {
+            "enabledStatusChecker": false,
+            "statusCodes": [
+              "200"
+            ]
+          },
+          "appearance": {
+            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/dispatcharr.png",
+            "appNameStatus": "normal",
+            "positionAppName": "column",
+            "lineClampAppName": 2
+          },
+          "integration": {
+            "type": null,
+            "properties": []
+          },
+          "area": {
+            "type": "category",
+            "properties": {
+              "id": "ff9b55cf-8cab-5bf4-9067-e64365eb6f6c"
+            }
+          },
+          "shape": {
+            "md": {
+              "location": {
+                "x": 0,
+                "y": 2
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "sm": {
+              "location": {
+                "x": 0,
+                "y": 2
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "lg": {
+              "location": {
+                "x": 0,
+                "y": 2
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            }
+          }
+        },
+        {
+          "id": "69370f9e-26f1-57a9-8733-f2214662d04d",
+          "name": "Gamarr",
+          "url": "http://gamarr.192.168.1.114.nip.io",
+          "behaviour": {
+            "onClickUrl": "http://gamarr.192.168.1.114.nip.io",
+            "externalUrl": "http://gamarr.192.168.1.114.nip.io",
+            "isOpeningNewTab": true,
+            "tooltipDescription": ""
+          },
+          "network": {
+            "enabledStatusChecker": false,
+            "statusCodes": [
+              "200"
+            ]
+          },
+          "appearance": {
+            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/gamarr.png",
+            "appNameStatus": "normal",
+            "positionAppName": "column",
+            "lineClampAppName": 2
+          },
+          "integration": {
+            "type": null,
+            "properties": []
+          },
+          "area": {
+            "type": "category",
+            "properties": {
+              "id": "ff9b55cf-8cab-5bf4-9067-e64365eb6f6c"
+            }
+          },
+          "shape": {
+            "md": {
+              "location": {
+                "x": 2,
+                "y": 2
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "sm": {
+              "location": {
+                "x": 2,
+                "y": 2
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "lg": {
+              "location": {
+                "x": 2,
+                "y": 2
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            }
+          }
+        },
+        {
+          "id": "171d8a7a-007b-501f-b448-de677f3877ff",
+          "name": "Romarr",
+          "url": "http://romarr.192.168.1.114.nip.io",
+          "behaviour": {
+            "onClickUrl": "http://romarr.192.168.1.114.nip.io",
+            "externalUrl": "http://romarr.192.168.1.114.nip.io",
+            "isOpeningNewTab": true,
+            "tooltipDescription": ""
+          },
+          "network": {
+            "enabledStatusChecker": false,
+            "statusCodes": [
+              "200"
+            ]
+          },
+          "appearance": {
+            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/romarr.png",
+            "appNameStatus": "normal",
+            "positionAppName": "column",
+            "lineClampAppName": 2
+          },
+          "integration": {
+            "type": null,
+            "properties": []
+          },
+          "area": {
+            "type": "category",
+            "properties": {
+              "id": "ff9b55cf-8cab-5bf4-9067-e64365eb6f6c"
+            }
+          },
+          "shape": {
+            "md": {
+              "location": {
+                "x": 4,
+                "y": 2
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "sm": {
+              "location": {
+                "x": 4,
+                "y": 2
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "lg": {
+              "location": {
+                "x": 4,
+                "y": 2
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            }
+          }
+        },
+        {
+          "id": "78c61602-014d-5f24-bb68-3f077a7d17f0",
+          "name": "ArgoCD",
+          "url": "http://argocd.192.168.1.114.nip.io",
+          "behaviour": {
+            "onClickUrl": "http://argocd.192.168.1.114.nip.io",
+            "externalUrl": "http://argocd.192.168.1.114.nip.io",
+            "isOpeningNewTab": true,
+            "tooltipDescription": ""
+          },
+          "network": {
+            "enabledStatusChecker": false,
+            "statusCodes": [
+              "200"
+            ]
+          },
+          "appearance": {
+            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/argocd.png",
+            "appNameStatus": "normal",
+            "positionAppName": "column",
+            "lineClampAppName": 2
+          },
+          "integration": {
+            "type": null,
+            "properties": []
+          },
+          "area": {
+            "type": "category",
+            "properties": {
+              "id": "1eadfe34-d9ea-5d81-be97-eb5e81e1955d"
+            }
+          },
+          "shape": {
+            "md": {
+              "location": {
+                "x": 0,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "sm": {
+              "location": {
+                "x": 0,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "lg": {
+              "location": {
+                "x": 0,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            }
+          }
+        },
+        {
+          "id": "124c7fa3-fa43-514f-928b-667b04afa5d6",
+          "name": "Kubernetes",
+          "url": "http://k8s.192.168.1.114.nip.io",
+          "behaviour": {
+            "onClickUrl": "http://k8s.192.168.1.114.nip.io",
+            "externalUrl": "http://k8s.192.168.1.114.nip.io",
+            "isOpeningNewTab": true,
+            "tooltipDescription": ""
+          },
+          "network": {
+            "enabledStatusChecker": false,
+            "statusCodes": [
+              "200"
+            ]
+          },
+          "appearance": {
+            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/kubernetes.png",
+            "appNameStatus": "normal",
+            "positionAppName": "column",
+            "lineClampAppName": 2
+          },
+          "integration": {
+            "type": null,
+            "properties": []
+          },
+          "area": {
+            "type": "category",
+            "properties": {
+              "id": "1eadfe34-d9ea-5d81-be97-eb5e81e1955d"
+            }
+          },
+          "shape": {
+            "md": {
+              "location": {
+                "x": 2,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "sm": {
+              "location": {
+                "x": 2,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "lg": {
+              "location": {
+                "x": 2,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            }
+          }
+        },
+        {
+          "id": "d96727d1-3884-521d-a90c-691ce8f1082d",
+          "name": "Grafana",
+          "url": "http://grafana.192.168.1.114.nip.io",
+          "behaviour": {
+            "onClickUrl": "http://grafana.192.168.1.114.nip.io",
+            "externalUrl": "http://grafana.192.168.1.114.nip.io",
+            "isOpeningNewTab": true,
+            "tooltipDescription": ""
+          },
+          "network": {
+            "enabledStatusChecker": false,
+            "statusCodes": [
+              "200"
+            ]
+          },
+          "appearance": {
+            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/grafana.png",
+            "appNameStatus": "normal",
+            "positionAppName": "column",
+            "lineClampAppName": 2
+          },
+          "integration": {
+            "type": null,
+            "properties": []
+          },
+          "area": {
+            "type": "category",
+            "properties": {
+              "id": "1eadfe34-d9ea-5d81-be97-eb5e81e1955d"
+            }
+          },
+          "shape": {
+            "md": {
+              "location": {
+                "x": 4,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "sm": {
+              "location": {
+                "x": 4,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "lg": {
+              "location": {
+                "x": 4,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            }
+          }
+        },
+        {
+          "id": "c599b283-dcf5-5a27-8528-f5dac2fecfa4",
+          "name": "InfluxDB",
+          "url": "http://influxdb.192.168.1.114.nip.io",
+          "behaviour": {
+            "onClickUrl": "http://influxdb.192.168.1.114.nip.io",
+            "externalUrl": "http://influxdb.192.168.1.114.nip.io",
+            "isOpeningNewTab": true,
+            "tooltipDescription": ""
+          },
+          "network": {
+            "enabledStatusChecker": false,
+            "statusCodes": [
+              "200"
+            ]
+          },
+          "appearance": {
+            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/influxdb.png",
+            "appNameStatus": "normal",
+            "positionAppName": "column",
+            "lineClampAppName": 2
+          },
+          "integration": {
+            "type": null,
+            "properties": []
+          },
+          "area": {
+            "type": "category",
+            "properties": {
+              "id": "1eadfe34-d9ea-5d81-be97-eb5e81e1955d"
+            }
+          },
+          "shape": {
+            "md": {
+              "location": {
+                "x": 6,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "sm": {
+              "location": {
+                "x": 6,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "lg": {
+              "location": {
+                "x": 6,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            }
+          }
+        },
+        {
+          "id": "2dc4ce29-72c1-55c3-b258-a9eeea00361f",
+          "name": "Open WebUI",
+          "url": "http://assistant.192.168.1.114.nip.io",
+          "behaviour": {
+            "onClickUrl": "http://assistant.192.168.1.114.nip.io",
+            "externalUrl": "http://assistant.192.168.1.114.nip.io",
+            "isOpeningNewTab": true,
+            "tooltipDescription": ""
+          },
+          "network": {
+            "enabledStatusChecker": false,
+            "statusCodes": [
+              "200"
+            ]
+          },
+          "appearance": {
+            "iconUrl": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/openwebui.png",
+            "appNameStatus": "normal",
+            "positionAppName": "column",
+            "lineClampAppName": 2
+          },
+          "integration": {
+            "type": null,
+            "properties": []
+          },
+          "area": {
+            "type": "category",
+            "properties": {
+              "id": "d29e0f99-9faa-5179-b6f8-74ee651012b8"
+            }
+          },
+          "shape": {
+            "md": {
+              "location": {
+                "x": 0,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "sm": {
+              "location": {
+                "x": 0,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            },
+            "lg": {
+              "location": {
+                "x": 0,
+                "y": 0
+              },
+              "size": {
+                "width": 2,
+                "height": 2
+              }
+            }
+          }
+        }
+      ]
+    }

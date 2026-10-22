@@ -22,3 +22,16 @@ spec:
           limits:
             memory: "512Mi"
             cpu: "500m"
+        volumeMounts:
+        - name: homarr-data
+          mountPath: /data
+        - name: homarr-board
+          mountPath: /app/data/configs/default.json
+          subPath: default.json
+      volumes:
+      - name: homarr-data
+        persistentVolumeClaim:
+          claimName: homarr-data
+      - name: homarr-board
+        configMap:
+          name: homarr-board
