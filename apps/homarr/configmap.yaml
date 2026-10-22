@@ -965,13 +965,13 @@ data:
           "logoImageUrl": "/imgs/logo/logo.png",
           "faviconUrl": "/imgs/favicon/favicon-squared.png",
           "backgroundImageUrl": "",
-          "customCss": "",
+          "customCss": "/* Warm earthy \"forest\" theme */\nbody {\n  background: #1c1c15 !important;\n  background-image: linear-gradient(160deg, #1c1c15 0%, #2a2a1e 45%, #363726 100%) !important;\n  background-attachment: fixed;\n  color: #cdcec8;\n}\n\n/* App tiles */\n.mantine-Card-root {\n  background: rgba(77, 79, 46, 0.35) !important;\n  border: 1px solid rgba(155, 93, 52, 0.3) !important;\n  border-radius: 14px !important;\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);\n  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;\n}\n\n.mantine-Card-root:hover {\n  transform: translateY(-3px);\n  border-color: rgba(155, 93, 52, 0.65) !important;\n  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);\n}\n\n/* Subtle scrollbar */\n::-webkit-scrollbar { width: 10px; }\n::-webkit-scrollbar-track { background: #1c1c15; }\n::-webkit-scrollbar-thumb { background: #4d4f2e; border-radius: 6px; }\n",
           "colors": {
-            "primary": "red",
-            "secondary": "yellow",
+            "primary": "orange",
+            "secondary": "lime",
             "shade": 7
           },
-          "appOpacity": 100,
+          "appOpacity": 90,
           "gridstack": {
             "columnCountSmall": 3,
             "columnCountMedium": 6,
