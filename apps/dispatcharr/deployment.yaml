@@ -34,4 +34,5 @@ spec:
               mountPath: /data
       volumes:
         - name: data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: dispatcharr-data
