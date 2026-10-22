@@ -69,7 +69,7 @@ spec:
         # rolling a new pod, not by moving this tag. `latest` would silently
         # move the image out from under git and hide it from Renovate.
         - name: palworld
-          image: thijsvanloef/palworld-server-docker:2.8.0
+          image: thijsvanloef/palworld-server-docker:v2.8.0
           ports:
             - name: game
               containerPort: 8211
