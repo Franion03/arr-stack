@@ -27,6 +27,8 @@ spec:
               value: "1000"
             - name: TZ
               value: "Etc/UTC"
+            - name: ROMARR_PORT
+              value: "6868"
           volumeMounts:
             - name: config
               mountPath: /config
