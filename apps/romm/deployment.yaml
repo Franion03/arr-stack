@@ -53,6 +53,16 @@ spec:
                 secretKeyRef:
                   name: romm-secrets
                   key: MARIADB_PASSWORD
+            - name: SCREENSCRAPER_USER
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secrets
+                  key: SCREENSCRAPER_USER
+            - name: SCREENSCRAPER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secrets
+                  key: SCREENSCRAPER_PASSWORD
           volumeMounts:
             - name: resources
               mountPath: /romm/resources
