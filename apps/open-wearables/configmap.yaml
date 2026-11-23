@@ -22,4 +22,4 @@ data:
   REDIS_SSL: "false"
   SENTRY_ENABLED: "false"
   OUTGOING_WEBHOOKS_ENABLED: "false"
-  ADMIN_EMAIL: "admin@home.local"
+  ADMIN_EMAIL: "fran.quiles00@gmail.com"
