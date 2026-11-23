@@ -1,0 +1,27 @@
+# Open Wearables backend: the health data hub the phone app syncs into.
+# Design: ~/HomeProjects/health-observability/docs/architecture.md
+#
+#   postgres  system of record
+#   redis     celery broker and cache (AOF on, so queued syncs survive a restart)
+#   backend   FastAPI; app.sh also runs the alembic migrations and seeds
+#   worker    celery workers (io, cpu, extension queues)
+#   beat      celery scheduler
+#   frontend  developer portal, LAN-only
+#
+# Shares the `health` namespace (and its default-deny ingress policy) with
+# influxdb and grafana. Svix (outgoing webhooks) and flower are left out:
+# OUTGOING_WEBHOOKS_ENABLED is off and nothing needs them yet.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: health
+
+resources:
+  - sealed-secret.yaml
+  - configmap.yaml
+  - postgres.yaml
+  - redis.yaml
+  - backend.yaml
+  - worker.yaml
+  - frontend.yaml
+  - network-policy.yaml

@@ -17,6 +17,7 @@ resources:
   - cloudflared/
   - assistant/
   - health/
+  - open-wearables/
   - palworld/
   - gamarr/
   - romarr/

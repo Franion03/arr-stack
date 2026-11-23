@@ -1,0 +1,72 @@
+# The health namespace is default-deny for ingress (apps/health/network-policy.yaml).
+# These allow only the paths Open Wearables needs.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app: postgres
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector: { matchLabels: { app: backend } }
+        - podSelector: { matchLabels: { app: worker } }
+        - podSelector: { matchLabels: { app: beat } }
+      ports:
+        - { port: 5432, protocol: TCP }
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redis-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app: redis
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector: { matchLabels: { app: backend } }
+        - podSelector: { matchLabels: { app: worker } }
+        - podSelector: { matchLabels: { app: beat } }
+      ports:
+        - { port: 6379, protocol: TCP }
+---
+# Browsers and the phone come through the ingress controller; the portal's
+# server-side calls come from the frontend pod.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+        - podSelector: { matchLabels: { app: frontend } }
+      ports:
+        - { port: 8000, protocol: TCP }
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - { port: 3000, protocol: TCP }

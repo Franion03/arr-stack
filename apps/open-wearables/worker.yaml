@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  labels:
+    app: worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+        - name: worker
+          image: themomentum/open-wearables-backend:0.11.0@sha256:aaa0ccc7e6dcfbb3a36db6e0f63ec2782cf31a5bbd7cb466d11cd8d4657bc6dd
+          command: [scripts/start/worker.sh]
+          envFrom:
+            - configMapRef: { name: open-wearables-config }
+            - secretRef: { name: open-wearables-secrets }
+          resources:
+            requests: { cpu: 100m, memory: 512Mi }
+            limits: { cpu: "2", memory: 1Gi }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beat
+  labels:
+    app: beat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beat
+  strategy:
+    type: Recreate          # exactly one scheduler
+  template:
+    metadata:
+      labels:
+        app: beat
+    spec:
+      containers:
+        - name: beat
+          image: themomentum/open-wearables-backend:0.11.0@sha256:aaa0ccc7e6dcfbb3a36db6e0f63ec2782cf31a5bbd7cb466d11cd8d4657bc6dd
+          command: [scripts/start/beat.sh]
+          envFrom:
+            - configMapRef: { name: open-wearables-config }
+            - secretRef: { name: open-wearables-secrets }
+          resources:
+            requests: { cpu: 50m, memory: 256Mi }
+            limits: { cpu: "1", memory: 512Mi }

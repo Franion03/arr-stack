@@ -1,0 +1,25 @@
+# Non-secret settings. SECRET_KEY, DB_PASSWORD and ADMIN_PASSWORD come from the
+# SealedSecret `open-wearables-secrets`.
+#
+# ENVIRONMENT=production makes the backend refuse the public default admin
+# password, so the sealed ADMIN_PASSWORD is mandatory.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: open-wearables-config
+data:
+  ENVIRONMENT: "production"
+  API_PORT: "8000"
+  CORS_ORIGINS: '["http://ow.192.168.1.114.nip.io"]'
+  FRONTEND_URL: "http://ow.192.168.1.114.nip.io"
+  DB_HOST: "postgres"
+  DB_PORT: "5432"
+  DB_NAME: "open-wearables"
+  DB_USER: "open-wearables"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  REDIS_DB: "0"
+  REDIS_SSL: "false"
+  SENTRY_ENABLED: "false"
+  OUTGOING_WEBHOOKS_ENABLED: "false"
+  ADMIN_EMAIL: "admin@home.local"
