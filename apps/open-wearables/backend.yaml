@@ -61,10 +61,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: open-wearables-api
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
 spec:
   ingressClassName: nginx
+  tls:
+    # The portal is https, so the browser can only call an https API (mixed content).
+    - hosts:
+        - ow-api.calzadoskiruz.com
+      secretName: ow-api-tls
   rules:
-    - host: ow-api.192.168.1.114.nip.io
+    - host: ow-api.calzadoskiruz.com
       http:
         paths:
           - path: /

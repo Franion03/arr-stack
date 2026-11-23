@@ -10,8 +10,8 @@ metadata:
 data:
   ENVIRONMENT: "production"
   API_PORT: "8000"
-  CORS_ORIGINS: '["http://ow.192.168.1.114.nip.io"]'
-  FRONTEND_URL: "http://ow.192.168.1.114.nip.io"
+  CORS_ORIGINS: '["https://ow.calzadoskiruz.com"]'
+  FRONTEND_URL: "https://ow.calzadoskiruz.com"
   DB_HOST: "postgres"
   DB_PORT: "5432"
   DB_NAME: "open-wearables"

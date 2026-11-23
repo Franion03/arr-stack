@@ -20,14 +20,14 @@ spec:
           env:
             # What a browser dials.
             - name: VITE_API_URL
-              value: http://ow-api.192.168.1.114.nip.io
+              value: https://ow-api.calzadoskiruz.com
             # The server's own hop stays inside the cluster.
             - name: API_URL
               value: http://backend:8000
             # SvelteKit (adapter-node) checks form POSTs against this; behind the
             # ingress it cannot infer the public URL, so login fails without it.
             - name: ORIGIN
-              value: http://ow.192.168.1.114.nip.io
+              value: https://ow.calzadoskiruz.com
           ports:
             - name: http
               containerPort: 3000
@@ -58,10 +58,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: open-wearables-portal
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
 spec:
   ingressClassName: nginx
+  tls:
+    # The session cookie is Secure, so the portal only works over https. The name resolves to 192.168.1.114 (DNS only, not in the tunnel); only the certificate is public.
+    - hosts:
+        - ow.calzadoskiruz.com
+      secretName: ow-portal-tls
   rules:
-    - host: ow.192.168.1.114.nip.io
+    - host: ow.calzadoskiruz.com
       http:
         paths:
           - path: /
