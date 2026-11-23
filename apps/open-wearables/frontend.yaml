@@ -24,6 +24,10 @@ spec:
             # The server's own hop stays inside the cluster.
             - name: API_URL
               value: http://backend:8000
+            # SvelteKit (adapter-node) checks form POSTs against this; behind the
+            # ingress it cannot infer the public URL, so login fails without it.
+            - name: ORIGIN
+              value: http://ow.192.168.1.114.nip.io
           ports:
             - name: http
               containerPort: 3000
